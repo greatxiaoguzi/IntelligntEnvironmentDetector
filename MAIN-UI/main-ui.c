@@ -1002,7 +1002,7 @@ void DispDataInfo(DispCirDef const *DispCirInfo,uint8_t Item)
 		default:break;
 	}
 }
-//加载传感器数据
+//加载传感器数据 修改
 void LoadSensorData(void)
 {
 	//传感器数据转换
