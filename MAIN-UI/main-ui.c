@@ -612,9 +612,9 @@ void EnvirQuaty(uint16_t x,uint16_t y)
 		}
 		else
 		{
-			Show_Str(AllDispCirInfo[PM2_5_ID].x0+28,y,200,16,AirQuiyGrade[7][0],16,0,GRAY,PARA_SHOW_INTERFACE_BACKCOLOR);
-			Show_Str(AllDispCirInfo[HCHO_ID].x0+28,y,200,16,AirQuiyGrade[7][0],16,0,GRAY,PARA_SHOW_INTERFACE_BACKCOLOR);
-			Show_Str(AllDispCirInfo[CARBON_ID].x0+28,y,200,16,AirQuiyGrade[7][0],16,0,GRAY,PARA_SHOW_INTERFACE_BACKCOLOR);
+			Show_Str(AllDispCirInfo[PM2_5_ID].x0+18,y,200,16,AirQuiyGrade[7][0],16,0,GRAY,PARA_SHOW_INTERFACE_BACKCOLOR);
+			Show_Str(AllDispCirInfo[HCHO_ID].x0+18,y,200,16,AirQuiyGrade[7][0],16,0,GRAY,PARA_SHOW_INTERFACE_BACKCOLOR);
+			Show_Str(AllDispCirInfo[CARBON_ID].x0+18,y,200,16,AirQuiyGrade[7][0],16,0,GRAY,PARA_SHOW_INTERFACE_BACKCOLOR);
 		}
 		if(SensorOnline.Device.SHT30 == 1)
 		{
@@ -1003,6 +1003,9 @@ void DispDataInfo(DispCirDef const *DispCirInfo,uint8_t Item)
 		default:break;
 	}
 }
+static uint8_t StartSampleFlag = 0;  //开机就开始采样标志
+static uint8_t PreMinute = 0;
+uint8_t SampleCnt = 0;
 //加载传感器数据 修改
 void LoadSensorData(void)
 {
@@ -1017,8 +1020,23 @@ void LoadSensorData(void)
 	Rx8025tGetTime(&SysTimeData);
 	if(SysParaSetInfo.Power_5V_Status == 1)
 	{
-		if((SysTimeData.Minute%SysParaSetInfo.SensorSamplingTimeUnit) == 0)
+		if((SysTimeData.Minute%SysParaSetInfo.SensorSamplingTimeUnit)==0&&StartSampleFlag==0)
 		{
+			StartSampleFlag = 1;
+			PreMinute = SysTimeData.Minute;
+		}
+		if(StartSampleFlag == 1)
+		{
+			if(SysTimeData.Minute != PreMinute)
+			{
+				PreMinute = SysTimeData.Minute;
+				SampleCnt ++;
+				if(SampleCnt == 3)
+				{
+					SampleCnt = 0;
+					StartSampleFlag = 0;
+				}
+			}
 			Handle_5V_POWER_Status(1);
 			if(SensorOnline.Device.PMS_5 == 1)
 				PMS_Send_Cmd(PMS_READ_DATA);  			//读PM2.5数据
@@ -1031,8 +1049,8 @@ void LoadSensorData(void)
 			{
 				if(SensorOnline.Device.SENSAIR == 1)
 				{
-					if(TIM4CH2_CAPTURE_STA&0X80)//成功捕获到了一次上升沿
-						TIM4CH2_CAPTURE_STA = 0;//开启下一次捕获
+					if(TIM4CH2_CAPTURE_STA&0X80)			//成功捕获到了一次上升沿
+						TIM4CH2_CAPTURE_STA = 0;			//开启下一次捕获
 				}
 			}
 		}
@@ -2884,18 +2902,18 @@ void SetLay2UI_SensoeSamplingUnit(void)
 		{
 			Encoder_Type = ENCODER_VOID;
 			SysParaSetInfo.SensorSamplingTimeUnit ++;
-			if(SysParaSetInfo.SensorSamplingTimeUnit>=59 || SysParaSetInfo.SensorSamplingTimeUnit<0)
-				SysParaSetInfo.SensorSamplingTimeUnit = 0;
+			if(SysParaSetInfo.SensorSamplingTimeUnit>=30 || SysParaSetInfo.SensorSamplingTimeUnit<0)
+				SysParaSetInfo.SensorSamplingTimeUnit = 3;
 			LCD_ShowNum(365,89,SysParaSetInfo.SensorSamplingTimeUnit,2,24,1,SET_SHOW_INTERFACE_RIGHT_TEXTCOLOR,SET_SHOW_INTERFACE_RIGHT_TEXTBACKCOLOR);
 		}
 		else if(Encoder_Type == ENCODER_BACKWORD)
 		{
 			Encoder_Type = ENCODER_VOID;
 			SysParaSetInfo.SensorSamplingTimeUnit --;
-			if(SysParaSetInfo.SensorSamplingTimeUnit <= 1)
-				SysParaSetInfo.SensorSamplingTimeUnit = 1;
+			if(SysParaSetInfo.SensorSamplingTimeUnit <= 3)  //采样间隔必须大于3
+				SysParaSetInfo.SensorSamplingTimeUnit = 3;
 			//Show_Str(290,170,300,24,"关闭  ",24,0,GRAY,BLUE);
-			LCD_ShowNum(365,89,SysParaSetInfo.SensorSamplingTimeUnit,2,24,1,WHITE,SET_SHOW_INTERFACE_RIGHT_TEXTBACKCOLOR);		
+			LCD_ShowNum(365,89,SysParaSetInfo.SensorSamplingTimeUnit,2,24,1,SET_SHOW_INTERFACE_RIGHT_TEXTCOLOR,SET_SHOW_INTERFACE_RIGHT_TEXTBACKCOLOR);		
 		}
 		else if(Encoder_Type == ENCODER_PRESSED)
 		{

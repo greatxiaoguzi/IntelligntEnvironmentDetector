@@ -653,7 +653,7 @@ uint8_t Sensor_Data_With_cJson(void)
 	cJSON_AddItemToObject(pJsonRoot,"Sensor2",pJsonSensor[1]=cJSON_CreateObject());
 	cJSON_AddStringToObject(pJsonSensor[1],"Name","HUMI");
 	cJSON_AddNumberToObject(pJsonSensor[1],"Value",SensorData.Humi);
-	if(Power_5V_IO_Status==0)   //如果传感器电源打开的话
+	if(Power_5V_IO_Status==0 && SampleCnt==2)   //如果传感器电源打开的话
 	{
 		cJSON_AddItemToObject(pJsonRoot,"Sensor3",pJsonSensor[2]=cJSON_CreateObject());
 		cJSON_AddStringToObject(pJsonSensor[2],"Name","PM2.5");

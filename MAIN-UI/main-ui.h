@@ -78,7 +78,7 @@
 #define INTERFACE_SWITCCH  		1
 #define POWER_5V_STATUS   		1
 #define SD_REM_TIME_UNIT     	5
-#define SENSOR_SAMPLING_UNIT 	1
+#define SENSOR_SAMPLING_UNIT 	3
 #define SENSOR_POWER_SWITCH     1  //CO2和HCHO全部关闭状态
 #define SENSOR_ALARM_STATUS     1  //报警开关全部关闭状态
 #define THRLD_VAL             	10     //阈值全部设置为0
@@ -174,6 +174,7 @@ typedef union
 }SensorOnlineStat_TypeDef;
 extern SensorOnlineStat_TypeDef SensorOnline; 
 extern uint8_t AlarmCloseFlag;
+extern uint8_t SampleCnt;
 extern uint8_t Power_5V_IO_Status;
 /*
 #define SW1_ON   1<<0
