@@ -174,6 +174,7 @@ typedef union
 }SensorOnlineStat_TypeDef;
 extern SensorOnlineStat_TypeDef SensorOnline; 
 extern uint8_t AlarmCloseFlag;
+extern uint8_t Power_5V_IO_Status;
 /*
 #define SW1_ON   1<<0
 #define SW2_ON   1<<1

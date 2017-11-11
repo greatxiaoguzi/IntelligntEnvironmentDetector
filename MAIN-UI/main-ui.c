@@ -83,6 +83,7 @@ uint8_t AutoJumpFlag = 0;  //自动跳转到主函数标志
 Interface_TypeDef Current_Show_Interface = Curr_No_Show;  //当前显示界面
 static uint8_t LoadStaticUIFlag = 0;
 uint8_t DispWifiInfoFlag = 0;    //显示WIFI的信息标志
+uint8_t Power_5V_IO_Status = 0XFF;  //5V传感器电源IO状态
 uint16_t AQI_Value;
 
 extern const unsigned char CloudUpload[106];
@@ -99,12 +100,12 @@ uint8_t* const AirQuiyGrade[8][6] =
 {
 	{"PM2.5:优  ","PM2.5:良  ","轻度污染","中度污染","重度污染","严重污染"},
 	{"甲醛良好","甲醛较高","甲醛超标"},
-	{"  无数据  ","CO2良好","CO2较高","CO2超标"},
+	{"无数据","CO2良好","CO2较高","CO2超标"},
 	{"极小颗粒:优","极小颗粒:良","极小颗粒:轻","极小颗粒:中","极小颗粒:重","极小颗粒:爆"},
 	{"较大颗粒:优","较大颗粒:良","较大颗粒:轻","较大颗粒:中","较大颗粒:重","较大颗粒:爆"},
 	{"温度适宜,","温度偏高,","高温预警,"},
 	{"湿度适宜!","空气偏干!","空气干燥!"},
-	{"无数据"}
+	{"  无数据  "}
 };
 static uint16_t CurrThemeColorFlag[3] = {0,0,0};  //更行主题背景的颜色
 static uint16_t PreThemeColorFlag[3] = {0,0,0};
@@ -352,7 +353,7 @@ uint16_t CalColorValue(uint16_t Value,uint8_t IdItem)  //QualityGradeColor[]
 	{
 		case HCHO_ID:  //甲醛
 		{
-			if(SysParaSetInfo.Power_5V_Status && SensorOnline.Device.WZ_S==1)
+			if(Power_5V_IO_Status==0 && SensorOnline.Device.WZ_S==1)
 			{
 				if(Value<=8)
 					RGB = QualityGradeColor[0];
@@ -372,7 +373,7 @@ uint16_t CalColorValue(uint16_t Value,uint8_t IdItem)  //QualityGradeColor[]
 		}break;
 		case PM2_5_ID:  //PM2.5
 		{
-			if(SysParaSetInfo.Power_5V_Status && SensorOnline.Device.PMS_5==1)
+			if(Power_5V_IO_Status==0 && SensorOnline.Device.PMS_5==1)
 			{
 				if(Value<=50)
 					RGB = QualityGradeColor[0];
@@ -392,7 +393,7 @@ uint16_t CalColorValue(uint16_t Value,uint8_t IdItem)  //QualityGradeColor[]
 		}break;
 		case CARBON_ID:  //CO2
 		{
-			if(SysParaSetInfo.Power_5V_Status && SensorOnline.Device.SENSAIR==1)
+			if(Power_5V_IO_Status==0 && SensorOnline.Device.SENSAIR==1)
 			{
 				if(Value<=600)
 					RGB = QualityGradeColor[0];
@@ -518,7 +519,7 @@ void EnvirQuaty(uint16_t x,uint16_t y)
 	AlarmStatusCheck();
 	if(Current_Show_Interface == Curr_Para_Show)  //只有在主显示界面下才显示
 	{
-		if(SysParaSetInfo.Power_5V_Status)
+		if(Power_5V_IO_Status==0)
 		{
 			//RGB = CalColorValue(SensorData.PMData.PM2_5_S,PM2_5_ID);
 			if(SensorOnline.Device.PMS_5 == 1)
@@ -744,7 +745,7 @@ uint8_t Get_Num_Bit(uint16_t Num)
 //显示图形内的传感器数据内容
 void DispDataInfo(DispCirDef const *DispCirInfo,uint8_t Item)
 {
-	char buf[20];			
+	char buf[20];
 	uint8_t Offset = 0;
 	uint16_t RGB;
 	uint8_t NumBit = 0;
@@ -795,7 +796,7 @@ void DispDataInfo(DispCirDef const *DispCirInfo,uint8_t Item)
 				PreThemeColorFlag[0] = CurrThemeColorFlag[0];
 			}
 			NumBit = Get_Num_Bit(SensorData.PMData.PM2_5_S);
-			if(GPIO_ReadOutputDataBit(GPIOA,GPIO_Pin_14)==0 && SensorOnline.Device.PMS_5==1)  //如果传感器电源被使能的话执行
+			if(Power_5V_IO_Status==0 && SensorOnline.Device.PMS_5==1)  //如果传感器电源被使能的话执行
 			{
 				switch(NumBit)
 				{
@@ -847,7 +848,7 @@ void DispDataInfo(DispCirDef const *DispCirInfo,uint8_t Item)
 					FillThemeBackColor(&AllDispCirInfo[Item_Id[0]],Item_Id[0],CurrThemeColorFlag[1]);
 					PreThemeColorFlag[1] = CurrThemeColorFlag[1];
 				}
-				if(SysParaSetInfo.Power_5V_Status && SensorOnline.Device.WZ_S==1)
+				if(Power_5V_IO_Status==0 && SensorOnline.Device.WZ_S==1)
 				{
 					sprintf(buf,"%d.%d%d",SensorData.HCHO/100,SensorData.HCHO/10%10,SensorData.HCHO%10);
 					Show_Str(DispCirInfo->x0-8,DispCirInfo->y0+20,150,DispCirInfo->FontSize,buf,DispCirInfo->FontSize,0,BLACK,RGB);
@@ -865,7 +866,7 @@ void DispDataInfo(DispCirDef const *DispCirInfo,uint8_t Item)
 					PreThemeColorFlag[1] = CurrThemeColorFlag[1];
 				}
 				NumBit = Get_Num_Bit(SensorData.PMData.PM1_0_S);
-				if(GPIO_ReadOutputDataBit(GPIOA,GPIO_Pin_14)==0 && SensorOnline.Device.PMS_5==1)
+				if(Power_5V_IO_Status==0 && SensorOnline.Device.PMS_5==1)
 				{
 					switch(NumBit)
 					{
@@ -932,7 +933,7 @@ void DispDataInfo(DispCirDef const *DispCirInfo,uint8_t Item)
 				}
 				NumBit = Get_Num_Bit(SensorData.PMData.PM10_S);
 			}
-			if(GPIO_ReadOutputDataBit(GPIOA,GPIO_Pin_14)==0)  //如果传感器电源被使能的话执行
+			if(Power_5V_IO_Status==0)  //如果传感器电源被使能的话执行
 			{
 				switch(NumBit)
 				{
@@ -1036,10 +1037,24 @@ void LoadSensorData(void)
 			}
 		}
 		else
+		{
 			Handle_5V_POWER_Status(0);
+			SensorData.PMData.PM2_5_S = 0;
+			SensorData.PMData.PM1_0_S = 0;
+			SensorData.PMData.PM10_S = 0;
+			SensorData.HCHO = 0;
+			SensorData.Carbon = 0;
+		}
 	}
 	else
+	{
 		Handle_5V_POWER_Status(0);
+		SensorData.PMData.PM2_5_S = 0;
+		SensorData.PMData.PM1_0_S = 0;
+		SensorData.PMData.PM10_S = 0;
+		SensorData.HCHO = 0;
+		SensorData.Carbon = 0;
+	}
 }
 //保存一小时的记录数据
 //一小时的第几分钟
@@ -1285,7 +1300,7 @@ void Load_ParaShow_Interface_1(void)
 		LoadColorPat();   							//加载色谱和标度
 		Show_Str(0,3,100,24,BRAND_NAME,24,0,WHITE,TOP_TITLE_BACK_COLOR);  //显示商标
 		if(AcuireFinishFlag == 0)
-			Show_Str(281,7,150,16,"无天气信息",16,0,GRAY,TOP_TITLE_BACK_COLOR);
+			Show_Str(281,17,150,16,"无天气信息",16,0,GRAY,TOP_TITLE_BACK_COLOR);
 		DispWeatherInfo();
 	}
 	Ctrl_Switch_Staus(360,296);	  //从右边往左边便宜坐标
@@ -2740,10 +2755,10 @@ void SetLay2UI_DevicePower(void)
 		}
 		else if(Encoder_Type == ENCODER_PRESSED)
 		{
-			if(SysParaSetInfo.Power_5V_Status)
+			/*if(SysParaSetInfo.Power_5V_Status)
 				Handle_5V_POWER_Status(1);
 			else
-				Handle_5V_POWER_Status(0);
+				Handle_5V_POWER_Status(0);*/
 			break;
 		}
 		delay_ms(10);

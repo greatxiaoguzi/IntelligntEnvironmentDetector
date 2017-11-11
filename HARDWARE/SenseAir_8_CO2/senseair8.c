@@ -53,12 +53,14 @@ void Handle_5V_POWER_Status(uint8_t Mode)
 		GPIO_InitStructure.GPIO_Speed = GPIO_Speed_50MHz;
 		GPIO_Init(GPIOA, &GPIO_InitStructure);
 		GPIO_ResetBits(GPIOA,GPIO_Pin_14);
+		Power_5V_IO_Status = 0;
 	}
 	else   //关闭
 	{
 		GPIO_InitStructure.GPIO_Pin  = GPIO_Pin_14;  
 		GPIO_InitStructure.GPIO_Mode = GPIO_Mode_IN_FLOATING; 
 		GPIO_Init(GPIOA, &GPIO_InitStructure);
+		Power_5V_IO_Status = 1;
 	}
 }
 //定时器5中断服务程序	 
