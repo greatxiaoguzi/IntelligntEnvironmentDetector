@@ -467,9 +467,9 @@ extern uint8_t nAsrStatus;
 //有优先级处理
 void AlarmStatusCheck(void)
 {
-	if(SysParaSetInfo.Power_5V_Status)
+	if(SensorData.HCHO>SysParaSetInfo.ThresHoldStatus.ThrldVal[HCHO_ID] && (SysParaSetInfo.SensorSwitch&0x02) == 0x02)
 	{
-		if(SensorData.HCHO>SysParaSetInfo.ThresHoldStatus.ThrldVal[HCHO_ID] && (SysParaSetInfo.SensorSwitch&0x02) == 0x02)
+		if(SysParaSetInfo.Power_5V_Status)
 		{
 			if((SysParaSetInfo.ThresHoldStatus.SensorAlarmStatus&0X08) == 0X08)
 			{
@@ -477,12 +477,18 @@ void AlarmStatusCheck(void)
 				//SetBeepFreq(AlarmFreqTab[9],1);  //这里替换成对应的播放MP3部分就可以了
 			}
 		}
-		else if(SensorData.PMData.PM2_5_S>SysParaSetInfo.ThresHoldStatus.ThrldVal[PM2_5_ID] && (SysParaSetInfo.ThresHoldStatus.SensorAlarmStatus&0X10) == 0X10)
+	}
+	else if(SensorData.PMData.PM2_5_S>SysParaSetInfo.ThresHoldStatus.ThrldVal[PM2_5_ID] && (SysParaSetInfo.ThresHoldStatus.SensorAlarmStatus&0X10) == 0X10)
+	{
+		if(SysParaSetInfo.Power_5V_Status)
 		{
 			AlarmCloseFlag = 2;
 			//SetBeepFreq(AlarmFreqTab[7],1);
 		}
-		else if(SensorData.Carbon>SysParaSetInfo.ThresHoldStatus.ThrldVal[CARBON_ID] && (SysParaSetInfo.SensorSwitch&0x01)==0x01)
+	}
+	else if(SensorData.Carbon>SysParaSetInfo.ThresHoldStatus.ThrldVal[CARBON_ID] && (SysParaSetInfo.SensorSwitch&0x01)==0x01)
+	{
+		if(SysParaSetInfo.Power_5V_Status)
 		{
 			if((SysParaSetInfo.ThresHoldStatus.SensorAlarmStatus&0X04) == 0X04)
 			{
