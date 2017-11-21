@@ -611,6 +611,55 @@ void LCD_DrawRectangle(uint16_t x1, uint16_t y1, uint16_t x2, uint16_t y2,uint16
 	LCD_DrawLine(x1,y2,x2,y2,color);
 	LCD_DrawLine(x2,y1,x2,y2,color);
 }
+//绘制圆角矩形
+void LCD_FillRoundFrame(int16_t x1,int16_t y1,int16_t x2,int16_t y2,uint16_t r,uint16_t c)
+{
+   int16_t  x,y,xd;
+   if ( x2 < x1 )
+   {
+      x = x2;
+      x2 = x1;
+      x1 = x;
+   }
+   if ( y2 < y1 )
+   {
+      y = y2;
+      y2 = y1;
+      y1 = y;
+   }
+
+   if ( r<=0 ) return;
+
+   xd = 3 - (r << 1);
+   x = 0;
+   y = r;
+
+   LCD_Fill(x1 + r, y1, x2 - r, y2, c);
+
+   while ( x <= y )
+   {
+     if( y > 0 )
+     {
+        LCD_DrawLine(x2 + x - r, y1 - y + r, x2+ x - r, y + y2 - r, c);
+        LCD_DrawLine(x1 - x + r, y1 - y + r, x1- x + r, y + y2 - r, c);
+     }
+     if( x > 0 )
+     {
+        LCD_DrawLine(x1 - y + r, y1 - x + r, x1 - y + r, x + y2 - r, c);
+        LCD_DrawLine(x2 + y - r, y1 - x + r, x2 + y - r, x + y2 - r, c);
+     }
+     if ( xd < 0 )
+     {
+        xd += (x << 2) + 6;
+     }
+     else
+     {
+        xd += ((x - y) << 2) + 10;
+        y--;
+     }
+     x++;
+   }
+}
 //在指定位置画一个指定角度的圆弧
 //(x,y):中心点
 //r    :半径

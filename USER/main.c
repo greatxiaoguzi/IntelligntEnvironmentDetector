@@ -103,6 +103,7 @@ int main(void)
 //		Adcval = bmp180Convert();
 //		LCD_ShowNum(100,100,Adcval,6,24,0,BLUE,BLACK);
 //		delay_ms(400);
+//		LED0 =! LED0;
 //	}
     //进入操作系统，创建任务
     OSInit();            						//UCOS初始化

@@ -182,6 +182,8 @@ void LCD_DrawLine(uint16_t x1, uint16_t y1, uint16_t x2, uint16_t y2,uint16_t co
 void LCD_Fill(uint16_t sx,uint16_t sy,uint16_t ex,uint16_t ey,uint16_t color);		   				//填充单色
 void LCDDrawCir(uint16_t x0,uint16_t y0,uint8_t r,uint16_t color,uint8_t xiangxian,uint8_t orFill);
 void Fill_Circle(uint16_t x0,uint16_t y0,uint8_t r,uint16_t color);
+void LCD_FillRoundFrame(int16_t x1,int16_t y1,int16_t x2,int16_t y2,uint16_t r,uint16_t c);
+
 
 void LCD_ShowChar(uint16_t x,uint16_t y,uint8_t num,uint8_t size,uint8_t mode,uint16_t point_color,uint16_t backcolor);						//显示一个字符
 void LCD_ShowNum(uint16_t x,uint16_t y,u32 num,uint8_t len,uint8_t size,uint8_t Mode,uint16_t Point_Color,uint16_t Back_Color);

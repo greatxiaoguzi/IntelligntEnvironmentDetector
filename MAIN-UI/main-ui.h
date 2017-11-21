@@ -1,5 +1,6 @@
 #include "sys.h"
-#define BRAND_NAME 		"Koala"
+#define BRAND_NAME 			"斯洛特"
+#define SOFTWARE_VERSION	"V1.1.100"
 
 /**************************ESP8266配置参数地址***************************/
 #define EEPROM_ADDR_ESP89266_CONFIG_FLAG 	0X0000
@@ -30,6 +31,7 @@
 #define SET_SHOW_INTERFACE_RIGHT_TEXTCOLOR      BLACK
 #define SET_SHOW_INTERFACE_RIGHT_BACKCOLOR		C_THISTLE
 
+#define DISP_AIR_ANGLE_ROUND                   40   //主界面的显示圆角半径
 #define LOW_VOL_ALARM_THREHOLD  2800
 
 //电池电压采样电阻为BAT_RES1，单位必须一样，若不一样要换算成同一单位
@@ -38,7 +40,7 @@
 #define LI_PRO_MAX_VAL  		3.9   //锂电池最大放电电压
 #define LI_PRO_MIN_VAL  		2.75  //锂电池最小放电电压
 
-#define Multiple  	  			-2  		//电池电压增益倍数
+#define Multiple  	  			-18  		//电池电压增益倍数
 #define HCHO_MAKE_UP  			3   		//甲醛补偿值
 
 #define PI						3.1415
@@ -102,8 +104,8 @@ __packed typedef struct  DISPCIRDEF
 {
 	uint16_t x0;
 	uint16_t y0;	
-	uint16_t width;			//半径
-	uint16_t height;
+	uint16_t x1;			//半径
+	uint16_t y1;
 	int8_t Xoff;
 	int8_t Yoff;
 	__packed struct ColorInfo

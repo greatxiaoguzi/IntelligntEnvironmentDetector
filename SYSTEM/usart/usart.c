@@ -346,7 +346,7 @@ void USART1_IRQHandler(void)                	//串口1中断服务程序
 			else
 			{
 				if(USART1_RX_STA == 0)
-					Wifi_Rec_Outtime = 500;
+					Wifi_Rec_Outtime = 700;
 				WifiRecBuf[USART1_RX_STA&0X3FFF] = Data;
 				USART1_RX_STA ++;
 				if(USART1_RX_STA > (USART1_REC_LEN-1))
@@ -694,7 +694,7 @@ uint8_t Sensor_Data_With_cJson(void)
 	}
 	strcat(pOut,"&^!");
 	cJSON_Delete(pJsonRoot0);
-	if(Esp8266_SendData(pOut,"&^!",300))
+	if(Esp8266_SendData(pOut,"&^!",660))
 	{
 		SendStat = 0x01;
 	}

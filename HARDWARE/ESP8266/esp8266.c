@@ -178,7 +178,7 @@ uint8_t Esp8266_Config(void)
 			Encoder_Type = ENCODER_PRESSED;
 		}
         Esp8266Config.WifiStartFlag = 0;
-		
+		Esp8266InitFinishFlag = 1;
 		return 1;
 	}
 	delay_ms(2000);
@@ -195,6 +195,7 @@ uint8_t Esp8266_Config(void)
 			Show_Str(260,90,200,16,"TCP模式设置失败.",16,0,RED,SET_SHOW_INTERFACE_RIGHT_BACKCOLOR);
 			Encoder_Type = ENCODER_PRESSED;
 		}
+		Esp8266InitFinishFlag = 1;
         return 1;
 	}
 	delay_ms(2000);
@@ -261,60 +262,59 @@ uint8_t Esp8266_Config(void)
 //		}
 //		return 1;
 //	}
-	if(!Esp8266_SetPassThrough(1))
-	{
-		if(Current_Show_Interface == Curr_SetPara_Show && DispWifiInfoFlag)
-			Show_Str(260,190,200,16,"设置透传成功",16,0,SET_SHOW_INTERFACE_RIGHT_TEXTCOLOR,SET_SHOW_INTERFACE_RIGHT_BACKCOLOR);
-	}
-	else
-	{
-		if(Current_Show_Interface == Curr_SetPara_Show && DispWifiInfoFlag)
-		{
-			Show_Str(260,190,200,16,"设置透传失败",16,0,RED,SET_SHOW_INTERFACE_RIGHT_BACKCOLOR);
-			Encoder_Type = ENCODER_PRESSED;
-		}
-		return 1;
-	}
+//	if(!Esp8266_SetPassThrough(1))
+//	{
+//		if(Current_Show_Interface == Curr_SetPara_Show && DispWifiInfoFlag)
+//			Show_Str(260,190,200,16,"设置透传成功",16,0,SET_SHOW_INTERFACE_RIGHT_TEXTCOLOR,SET_SHOW_INTERFACE_RIGHT_BACKCOLOR);
+//	}
+//	else
+//	{
+//		if(Current_Show_Interface == Curr_SetPara_Show && DispWifiInfoFlag)
+//		{
+//			Show_Str(260,190,200,16,"设置透传失败",16,0,RED,SET_SHOW_INTERFACE_RIGHT_BACKCOLOR);
+//			Encoder_Type = ENCODER_PRESSED;
+//		}
+//		return 1;
+//	}
 	if(AcuireFinishFlag==0 && Current_Show_Interface != Curr_Set_Show)  			//在设置参数的情况下不进入
 	{
-			Esp8266_QuitPassThroughLinkServer();
-			Esp8266_SetPassThrough(1);
-			for(uint8_t i=0;i<2;i++)
+		Esp8266_QuitPassThroughLinkServer();
+		Esp8266_SetPassThrough(1);
+		for(uint8_t i=0;i<4;i++)
+		{
+			if(!Esp8266GetBeijingInfo())
 			{
-				if(!Esp8266GetBeijingInfo())
-				{
-					TimeAcquireStatus = 1;
-					break;
-				}
-				else
-				{
-					TimeAcquireStatus = 0;
-					continue;
-				}
+				TimeAcquireStatus = 1;
+				break;
 			}
-			
-			Esp8266_QuitPassThroughLinkServer();
-			Esp8266_DisConectServer();
-			Esp8266_SetPassThrough(1);
-			//获取网络时间信息并且校准
-			for(uint8_t i=0;i<2;i++)
+			else
 			{
-				//获取天气信息
-				if(!Esp8266GetWeatherInfo(WEATHER_ADDRESS,APIKEY))  //获取网络天气预报
-				{
-					WeatherAcquireStatus = 1;
-					break;
-				}
-				else
-				{
-					WeatherAcquireStatus = 0;
-					continue;
-				}
+				TimeAcquireStatus = 0;
+				continue;
 			}
-			Esp8266_QuitPassThroughLinkServer();
-			Esp8266_DisConectServer();
-			Esp8266_SetPassThrough(1);
-			AcuireFinishFlag = 1;
+		}
+		Esp8266_QuitPassThroughLinkServer();
+		Esp8266_DisConectServer();
+		Esp8266_SetPassThrough(1);
+		//获取网络时间信息并且校准
+		for(uint8_t i=0;i<4;i++)
+		{
+			//获取天气信息
+			if(!Esp8266GetWeatherInfo(WEATHER_ADDRESS,APIKEY))  //获取网络天气预报
+			{
+				WeatherAcquireStatus = 1;
+				break;
+			}
+			else
+			{
+				WeatherAcquireStatus = 0;
+				continue;
+			}
+		}
+		Esp8266_QuitPassThroughLinkServer();
+		Esp8266_DisConectServer();
+		Esp8266_SetPassThrough(1);
+		AcuireFinishFlag = 1;
 	}
 	//LCD_Clear(BLACK);   //清屏
 	if(Current_Show_Interface==Curr_SetPara_Show && DispWifiInfoFlag)
@@ -335,6 +335,7 @@ uint8_t Esp8266_Config(void)
 				Encoder_Type = ENCODER_PRESSED;
 			}
 			delay_ms(500);
+			Esp8266InitFinishFlag = 1;
 			return 1;
 		}
 	}
@@ -348,6 +349,7 @@ uint8_t Esp8266_Config(void)
 	{
 		if(Current_Show_Interface == Curr_SetPara_Show)
 			Encoder_Type = ENCODER_PRESSED;
+		Esp8266InitFinishFlag = 1;
 		return 1;
 	}
 	Esp8266InitFinishFlag = 1;
@@ -540,12 +542,12 @@ uint8_t Esp8266GetWeatherInfo(const uint8_t *host,const uint8_t *apikey)
 	for(uint8_t i=0;i<len;i++)
 		bufcity[i] = *(p1+i);
 	bufcity[len] = '\0';   //加入结束符
-	if(Esp8266_Send_Cmd("AT+CIPSEND","OK",200))
+	if(Esp8266_Send_Cmd("AT+CIPSEND","OK",300))
 	{
 		return 1;
 	}
 	sprintf(buf,"GET https://%s/v3/weather/now.json?key=%s&location=%s&language=zh-Hans&unit=c",host,apikey,bufcity);
-	if(!Esp8266_SendData(buf,"",200))  //成功得到天气数据
+	if(!Esp8266_SendData(buf,"",500))  //成功得到天气数据
 	{
 		HandleWeathrerDataInfo(WifiRecBuf);
 		return 0;
@@ -568,10 +570,10 @@ uint8_t Esp8266GetBeijingInfo(void)
 		else
 			continue;
 	}
-	if(Esp8266_Send_Cmd("AT+CIPSEND","OK",200))
+	if(Esp8266_Send_Cmd("AT+CIPSEND","OK",300))
 		return 1;
 	sprintf(buf,"GET http://api.k780.com:88/?app=life.time&appkey=10003&sign=b59bc3ef6191eb9f747dd4e83c99f2a4&format=json\r\n");
-	if(!Esp8266_SendData(buf,"",200))  //成功得到天气数据
+	if(!Esp8266_SendData(buf,"",500))  //成功得到天气数据
 	{
 		HandleTimeDataInfo(WifiRecBuf);
 		return 0;

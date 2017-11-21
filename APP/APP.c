@@ -73,14 +73,14 @@ void tmr3_callback(OS_TMR *ptmr,void *p_arg)
 			}
 		}
 	}
-	if(!StandbyMode || SensorData.BatVol<=Vol_To_ADC[1])  		//关机用,电压小于一定值的时候开始关机
+	if(!StandbyMode || SensorData.BatVol<=Vol_To_ADC[3])  		//关机用,电压小于一定值的时候开始关机
 	{
-		if(POWER_DETECC || SensorData.BatVol<=Vol_To_ADC[1])  	//检测到有效电平
+		if(POWER_DETECC || SensorData.BatVol<=Vol_To_ADC[3])  	//检测到有效电平
 		{
 			if(CloseMachineCnt++ >= 60)
 			{
 				CloseMachineFlag = 1;
-				if(SensorData.BatVol <= Vol_To_ADC[1])
+				if(SensorData.BatVol <= Vol_To_ADC[3])
 					LoadPowerOffUI(0);  //电量低关机操作
 				else
 					LoadPowerOffUI(1);  //正常关机操作
@@ -202,8 +202,9 @@ void DataCloud_task(void *pdata)
 								{
 									WifiOnlineDetect = 0;
 									Esp8266_QuitPassThroughLinkServer();
-									//Esp8266_ConectServer(UP_LOAD_SENSOR_DATA_MODE);
-									//PkgURL(2,(uint8_t*)UserKey);
+									Esp8266_DisConectServer();
+//									Esp8266_ConectServer(UP_LOAD_SENSOR_DATA_MODE);
+//									PkgURL(2,(uint8_t*)UserKey);
 									Esp8266_Config();
 								}
 							}break;
@@ -212,7 +213,7 @@ void DataCloud_task(void *pdata)
 					}
 				}
 			}
-			delay_ms(200);
+			delay_ms(100);
 		 }
 		delay_ms(50);   //任务切换
 	  }
