@@ -373,7 +373,7 @@
               <MiscControls></MiscControls>
               <Define>STM32F10X_HD,USE_STDPERIPH_DRIVER</Define>
               <Undefine></Undefine>
-              <IncludePath>..\SYSTEM\sys;..\USER;..\STM32F10x_FWLib\inc;..\CORE;..\HARDWARE\ADC;..\HARDWARE\EXTI;..\HARDWARE\INCLUDE;..\HARDWARE\KEY;..\HARDWARE\LED;..\HARDWARE\MOTO;..\HARDWARE\SYS_INIT;..\HARDWARE\SPI;..\HARDWARE\LCD;..\UCOSII\CONFIG;..\UCOSII\PORT;..\UCOSII\CORE;..\SYSTEM\delay;..\SYSTEM\usart;..\APP;..\HARDWARE\MYI2C;..\HARDWARE\SD_CARD;..\HARDWARE\ESP8266;..\HARDWARE\BMP_1820;..\HARDWARE\MYI2C;..\HARDWARE\EEPROM;..\HARDWARE\BSP;..\HARDWARE\W25Q64;..\HARDWARE\RS485;..\HARDWARE\AT24CXX;..\HARDWARE\RX8025T;..\HARDWARE\SHT30;..\HARDWARE\SenseAir_8_CO2;..\HARDWARE\LD3320;..\FATFS\option;..\FATFS;..\FONTSHOW;..\MALLOC;..\MAIN-UI;..\Algort</IncludePath>
+              <IncludePath>..\SYSTEM\sys;..\USER;..\STM32F10x_FWLib\inc;..\CORE;..\HARDWARE\ADC;..\HARDWARE\EXTI;..\HARDWARE\INCLUDE;..\HARDWARE\KEY;..\HARDWARE\LED;..\HARDWARE\MOTO;..\HARDWARE\SYS_INIT;..\HARDWARE\SPI;..\HARDWARE\LCD;..\UCOSII\CONFIG;..\UCOSII\PORT;..\UCOSII\CORE;..\SYSTEM\delay;..\SYSTEM\usart;..\APP;..\HARDWARE\MYI2C;..\HARDWARE\SD_CARD;..\HARDWARE\ESP8266;..\HARDWARE\BMP_1820;..\HARDWARE\MYI2C;..\HARDWARE\EEPROM;..\HARDWARE\BSP;..\HARDWARE\W25Q64;..\HARDWARE\RS485;..\HARDWARE\AT24CXX;..\HARDWARE\RX8025T;..\HARDWARE\SHT30;..\HARDWARE\SenseAir_8_CO2;..\HARDWARE\LD3320;..\HARDWARE\IWDG;..\FATFS\option;..\FATFS;..\FONTSHOW;..\MALLOC;..\MAIN-UI;..\Algort</IncludePath>
             </VariousControls>
           </Cads>
           <Aads>
@@ -541,6 +541,11 @@
               <FileType>1</FileType>
               <FilePath>..\HARDWARE\LD3320\ld3320.c</FilePath>
             </File>
+            <File>
+              <FileName>iwdg.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\HARDWARE\IWDG\iwdg.c</FilePath>
+            </File>
           </Files>
         </Group>
         <Group>
@@ -635,6 +640,11 @@
               <FileName>stm32f10x_flash.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\STM32F10x_FWLib\src\stm32f10x_flash.c</FilePath>
+            </File>
+            <File>
+              <FileName>stm32f10x_iwdg.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\STM32F10x_FWLib\src\stm32f10x_iwdg.c</FilePath>
             </File>
             <File>
               <FileName>misc.c</FileName>

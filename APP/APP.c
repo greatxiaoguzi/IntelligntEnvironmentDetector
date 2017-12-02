@@ -107,6 +107,7 @@ void tmr3_callback(OS_TMR *ptmr,void *p_arg)
 			}
 		}
 	}
+	IWDG_ReloadCounter();
 	if(Beep++ ==3)
 	{
 		Beep = 0;
@@ -156,6 +157,7 @@ void MainUI_task(void *pdata)
     while(1)
     {
 		MenuOperate();   //处理按键响应函数 
+		//IWDG_ReloadCounter();   //喂狗
     }
 }
 

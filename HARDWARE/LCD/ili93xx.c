@@ -518,7 +518,7 @@ void LCD_Set_Window(uint16_t sx,uint16_t sy,uint16_t width,uint16_t height)
 //在指定区域内填充单个颜色
 //(sx,sy),(ex,ey):填充矩形对角坐标,区域大小为:(ex-sx+1)*(ey-sy+1)   
 //color:要填充的颜色     0,150,200,250
-void LCD_Fill(uint16_t xsta,uint16_t ysta,uint16_t xend,uint16_t yend,uint16_t color)
+void LCD_Fill(int16_t xsta,int16_t ysta,int16_t xend,int16_t yend,uint16_t color)
 {          
 	uint16_t i,j;
 	uint16_t xlen=0;
@@ -568,7 +568,7 @@ void LCD_Fill(uint16_t xsta,uint16_t ysta,uint16_t xend,uint16_t yend,uint16_t c
 //画线
 //x1,y1:起点坐标
 //x2,y2:终点坐标  ,
-void LCD_DrawLine(uint16_t x1, uint16_t y1, uint16_t x2, uint16_t y2,uint16_t color)
+void LCD_DrawLine(int16_t x1, int16_t y1, int16_t x2, int16_t y2,uint16_t color)
 {
 	uint16_t t; 
 	int xerr=0,yerr=0,delta_x,delta_y,distance; 

@@ -40,7 +40,7 @@
 #define LI_PRO_MAX_VAL  		3.9   //锂电池最大放电电压
 #define LI_PRO_MIN_VAL  		2.75  //锂电池最小放电电压
 
-#define Multiple  	  			-18  		//电池电压增益倍数
+#define Multiple  	  			-23  		//电池电压增益倍数
 #define HCHO_MAKE_UP  			3   		//甲醛补偿值
 
 #define PI						3.1415

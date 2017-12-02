@@ -13,6 +13,7 @@
 #include "stm32f10x_fsmc.h"
 #include "stm32f10x_flash.h"
 #include "stm32f10x.h"
+#include "stm32f10x_iwdg.h"
 //数学系统文件
 #include <math.h>
 #include "sys_init.h"	//系统时钟

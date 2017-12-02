@@ -100,7 +100,7 @@ uint8_t* const AirQuiyGrade[8][6] =
 {
 	{"PM2.5:优  ","PM2.5:良  ","轻度污染","中度污染","重度污染","严重污染"},
 	{"甲醛良好","甲醛较高","甲醛超标"},
-	{"无数据","CO2良好","CO2较高","CO2超标"},
+	{"  无数据  ","CO2良好 ","CO2较高 ","CO2超标 "},
 	{"极小颗粒:优","极小颗粒:良","极小颗粒:轻","极小颗粒:中","极小颗粒:重","极小颗粒:爆"},
 	{"较大颗粒:优","较大颗粒:良","较大颗粒:轻","较大颗粒:中","较大颗粒:重","较大颗粒:爆"},
 	{"温度适宜,","温度偏高,","高温预警,"},
@@ -126,9 +126,9 @@ const DispCirDef AllDispCirInfo[6]=
 //锂电池电压电压向ADC值得转换
 const uint16_t Vol_To_ADC[13]=
 {
-	2332,3263,3425,3449,3474,
-	3511,3524,3561,3598,3660,
-	3722,3797,3908
+	1918,2686,2819,2839,2860,
+	2890,2901,2931,2962,3013,3064,
+	3126,3217
 };
 //唤醒待机的机器从待机中
 //void aWake_Standby(void)
@@ -514,10 +514,10 @@ void EnvirQuaty(uint16_t x,uint16_t y)
 	//uint16_t RGB;
 	uint16_t USASt_Value;   //美标值
     Cal_USASt_Value(SensorData.PMData.PM2_5_S,&AQI_Value,&USASt_Value);
-	Show_Str(80,3,300,24,"AQI:",24,0,AQI_COLOR,TOP_TITLE_BACK_COLOR);
-	Show_Str(165,3,300,24,"美标:",24,0,AQI_COLOR,TOP_TITLE_BACK_COLOR);
-    LCD_ShowNum(128,3,AQI_Value,3,24,0,AQI_COLOR,TOP_TITLE_BACK_COLOR);
-	LCD_ShowNum(223,3,USASt_Value,3,24,0,AQI_COLOR,TOP_TITLE_BACK_COLOR);
+	Show_Str(80,11,300,24,"AQI:",24,0,AQI_COLOR,TOP_TITLE_BACK_COLOR);
+	Show_Str(165,10,300,24,"美标:",24,0,AQI_COLOR,TOP_TITLE_BACK_COLOR);
+    LCD_ShowNum(128,11,AQI_Value,3,24,0,AQI_COLOR,TOP_TITLE_BACK_COLOR);
+	LCD_ShowNum(223,11,USASt_Value,3,24,0,AQI_COLOR,TOP_TITLE_BACK_COLOR);
 	if(SysParaSetInfo.Power_5V_Status)
 		DrawDynamicCir(AQI_Value,WHITE);
 	else
@@ -532,7 +532,7 @@ void EnvirQuaty(uint16_t x,uint16_t y)
 			{
 				if(AQI_Value<=50 && AQI_Value>=0)  //等级1
 				{
-					Show_Str(AllDispCirInfo[PM2_5_ID].x0+30,y,200,16,AirQuiyGrade[PM2_5_ID][0],16,0,AQI_COLOR,PARA_SHOW_INTERFACE_BACKCOLOR);
+					Show_Str(AllDispCirInfo[PM2_5_ID].x0+40,y,200,16,AirQuiyGrade[PM2_5_ID][0],16,0,AQI_COLOR,PARA_SHOW_INTERFACE_BACKCOLOR);
 					if((SysParaSetInfo.SensorSwitch&0X02)!=0X02)
 						Show_Str(AllDispCirInfo[HCHO_ID].x0+30,y,200,16,AirQuiyGrade[3][0],16,0,AQI_COLOR,PARA_SHOW_INTERFACE_BACKCOLOR);
 					if((SysParaSetInfo.SensorSwitch&0X01)!=0X01)
@@ -540,7 +540,7 @@ void EnvirQuaty(uint16_t x,uint16_t y)
 				}
 				else if(AQI_Value>50 && AQI_Value<=100)//等级2
 				{
-					Show_Str(AllDispCirInfo[PM2_5_ID].x0+30,y,200,16,AirQuiyGrade[PM2_5_ID][1],16,0,AQI_COLOR,PARA_SHOW_INTERFACE_BACKCOLOR);
+					Show_Str(AllDispCirInfo[PM2_5_ID].x0+40,y,200,16,AirQuiyGrade[PM2_5_ID][1],16,0,AQI_COLOR,PARA_SHOW_INTERFACE_BACKCOLOR);
 					if((SysParaSetInfo.SensorSwitch&0X02)!=0X02)
 						Show_Str(AllDispCirInfo[HCHO_ID].x0+30,y,200,16,AirQuiyGrade[3][1],16,0,AQI_COLOR,PARA_SHOW_INTERFACE_BACKCOLOR);
 					if((SysParaSetInfo.SensorSwitch&0X01)!=0X01)
@@ -548,7 +548,7 @@ void EnvirQuaty(uint16_t x,uint16_t y)
 				}
 				else if(AQI_Value>=100 && AQI_Value<=150)//等级3
 				{
-					Show_Str(AllDispCirInfo[PM2_5_ID].x0+30,y,200,16,AirQuiyGrade[PM2_5_ID][2],16,0,AQI_COLOR,PARA_SHOW_INTERFACE_BACKCOLOR);
+					Show_Str(AllDispCirInfo[PM2_5_ID].x0+40,y,200,16,AirQuiyGrade[PM2_5_ID][2],16,0,AQI_COLOR,PARA_SHOW_INTERFACE_BACKCOLOR);
 					if((SysParaSetInfo.SensorSwitch&0X02)!=0X02)
 						Show_Str(AllDispCirInfo[HCHO_ID].x0+30,y,200,16,AirQuiyGrade[3][2],16,0,AQI_COLOR,PARA_SHOW_INTERFACE_BACKCOLOR);
 					if((SysParaSetInfo.SensorSwitch&0X01)!=0X01)
@@ -556,7 +556,7 @@ void EnvirQuaty(uint16_t x,uint16_t y)
 				}
 				else if(AQI_Value>=150 && AQI_Value<=200)//等级4
 				{
-					Show_Str(AllDispCirInfo[PM2_5_ID].x0+30,y,200,16,AirQuiyGrade[PM2_5_ID][3],16,0,AQI_COLOR,PARA_SHOW_INTERFACE_BACKCOLOR);
+					Show_Str(AllDispCirInfo[PM2_5_ID].x0+40,y,200,16,AirQuiyGrade[PM2_5_ID][3],16,0,AQI_COLOR,PARA_SHOW_INTERFACE_BACKCOLOR);
 					if((SysParaSetInfo.SensorSwitch&0X02)!=0X02)
 						Show_Str(AllDispCirInfo[HCHO_ID].x0+30,y,200,16,AirQuiyGrade[3][3],16,0,AQI_COLOR,PARA_SHOW_INTERFACE_BACKCOLOR);
 					if((SysParaSetInfo.SensorSwitch&0X01)!=0X01)
@@ -564,7 +564,7 @@ void EnvirQuaty(uint16_t x,uint16_t y)
 				}
 				else if(AQI_Value>=200 && AQI_Value<=300)//等级5
 				{
-					Show_Str(AllDispCirInfo[PM2_5_ID].x0+30,y,200,16,AirQuiyGrade[PM2_5_ID][4],16,0,AQI_COLOR,PARA_SHOW_INTERFACE_BACKCOLOR);
+					Show_Str(AllDispCirInfo[PM2_5_ID].x0+40,y,200,16,AirQuiyGrade[PM2_5_ID][4],16,0,AQI_COLOR,PARA_SHOW_INTERFACE_BACKCOLOR);
 					if((SysParaSetInfo.SensorSwitch&0X02)!=0X02)
 						Show_Str(AllDispCirInfo[HCHO_ID].x0+30,y,200,16,AirQuiyGrade[3][4],16,0,AQI_COLOR,PARA_SHOW_INTERFACE_BACKCOLOR);
 					if((SysParaSetInfo.SensorSwitch&0X01)!=0X01)
@@ -572,7 +572,7 @@ void EnvirQuaty(uint16_t x,uint16_t y)
 				}
 				else if(AQI_Value>300)//等级6
 				{
-					Show_Str(AllDispCirInfo[PM2_5_ID].x0+30,y,200,16,AirQuiyGrade[PM2_5_ID][5],16,0,AQI_COLOR,PARA_SHOW_INTERFACE_BACKCOLOR);
+					Show_Str(AllDispCirInfo[PM2_5_ID].x0+40,y,200,16,AirQuiyGrade[PM2_5_ID][5],16,0,AQI_COLOR,PARA_SHOW_INTERFACE_BACKCOLOR);
 					if((SysParaSetInfo.SensorSwitch&0X02)!=0X02)
 						Show_Str(AllDispCirInfo[HCHO_ID].x0+30,y,200,16,AirQuiyGrade[3][5],16,0,AQI_COLOR,PARA_SHOW_INTERFACE_BACKCOLOR);
 					if((SysParaSetInfo.SensorSwitch&0X01)!=0X01)
@@ -583,11 +583,11 @@ void EnvirQuaty(uint16_t x,uint16_t y)
 					if(SensorOnline.Device.WZ_S == 1)
 					{
 						if(SensorData.HCHO<8)  //甲醛和CO2判断
-							Show_Str(AllDispCirInfo[HCHO_ID].x0+30,y,200,16,AirQuiyGrade[HCHO_ID][0],16,0,AQI_COLOR,PARA_SHOW_INTERFACE_BACKCOLOR);
+							Show_Str(AllDispCirInfo[HCHO_ID].x0+40,y,200,16,AirQuiyGrade[HCHO_ID][0],16,0,AQI_COLOR,PARA_SHOW_INTERFACE_BACKCOLOR);
 						else if(SensorData.HCHO>8&&SensorData.HCHO<10)
-							Show_Str(AllDispCirInfo[HCHO_ID].x0+30,y,200,16,AirQuiyGrade[HCHO_ID][1],16,0,AQI_COLOR,PARA_SHOW_INTERFACE_BACKCOLOR);
+							Show_Str(AllDispCirInfo[HCHO_ID].x0+40,y,200,16,AirQuiyGrade[HCHO_ID][1],16,0,AQI_COLOR,PARA_SHOW_INTERFACE_BACKCOLOR);
 						else
-							Show_Str(AllDispCirInfo[HCHO_ID].x0+30,y,200,16,AirQuiyGrade[HCHO_ID][2],16,0,AQI_COLOR,PARA_SHOW_INTERFACE_BACKCOLOR);
+							Show_Str(AllDispCirInfo[HCHO_ID].x0+40,y,200,16,AirQuiyGrade[HCHO_ID][2],16,0,AQI_COLOR,PARA_SHOW_INTERFACE_BACKCOLOR);
 					}
 					else
 						Show_Str(AllDispCirInfo[HCHO_ID].x0+30,y,200,16,AirQuiyGrade[7][0],16,0,AQI_COLOR,PARA_SHOW_INTERFACE_BACKCOLOR);
@@ -602,14 +602,14 @@ void EnvirQuaty(uint16_t x,uint16_t y)
 						if(SensorData.Carbon<1000)
 						{
 							if(SensorData.Carbon==0)
-								Show_Str(AllDispCirInfo[CARBON_ID].x0+30,y,200,16,AirQuiyGrade[CARBON_ID][0],16,0,GRAY,PARA_SHOW_INTERFACE_BACKCOLOR);
+								Show_Str(AllDispCirInfo[CARBON_ID].x0+40,y,200,16,AirQuiyGrade[CARBON_ID][0],16,0,GRAY,PARA_SHOW_INTERFACE_BACKCOLOR);
 							else
-								Show_Str(AllDispCirInfo[CARBON_ID].x0+30,y,200,16,AirQuiyGrade[CARBON_ID][1],16,0,AQI_COLOR,PARA_SHOW_INTERFACE_BACKCOLOR);
+								Show_Str(AllDispCirInfo[CARBON_ID].x0+40,y,200,16,AirQuiyGrade[CARBON_ID][1],16,0,AQI_COLOR,PARA_SHOW_INTERFACE_BACKCOLOR);
 						}
 						else if(SensorData.Carbon>=1000&&SensorData.Carbon<1500)
-							Show_Str(AllDispCirInfo[CARBON_ID].x0+30,y,200,16,AirQuiyGrade[CARBON_ID][2],16,0,AQI_COLOR,PARA_SHOW_INTERFACE_BACKCOLOR);
+							Show_Str(AllDispCirInfo[CARBON_ID].x0+40,y,200,16,AirQuiyGrade[CARBON_ID][2],16,0,AQI_COLOR,PARA_SHOW_INTERFACE_BACKCOLOR);
 						else 
-							Show_Str(AllDispCirInfo[CARBON_ID].x0+30,y,200,16,AirQuiyGrade[CARBON_ID][3],16,0,AQI_COLOR,PARA_SHOW_INTERFACE_BACKCOLOR);
+							Show_Str(AllDispCirInfo[CARBON_ID].x0+40,y,200,16,AirQuiyGrade[CARBON_ID][3],16,0,AQI_COLOR,PARA_SHOW_INTERFACE_BACKCOLOR);
 					}
 					else
 						Show_Str(AllDispCirInfo[CARBON_ID].x0+30,y,200,16,AirQuiyGrade[7][0],16,0,AQI_COLOR,PARA_SHOW_INTERFACE_BACKCOLOR);
@@ -714,15 +714,12 @@ void Load_ShowUI_1(DispCirDef const *DispCirInfo,uint8_t Item)
 			}
 		}break;
 		case AIRPRES_ID:
-//			LCDDrawCir(DispCirInfo->x0,DispCirInfo->y0,DispCirInfo->r1,DispCirInfo->ColorInfo.Cir1color,0,1);  	 //外圆
-//			LCDDrawCir(DispCirInfo->x0,DispCirInfo->y0,DispCirInfo->r2,DispCirInfo->ColorInfo.Cir2color,0,1);      //内圆
 			if(SensorOnline.Device.BMP180 == 1)
 			{
 				Show_DrawBMP(DispCirInfo->x0-65,DispCirInfo->y0+10,40,40,(uint8_t*)AirPressLogo,DispCirInfo->ColorInfo.Textcolor,PARA_SHOW_INTERFACE_BACKCOLOR);
 				Show_Str(DispCirInfo->x0+55,DispCirInfo->y0-10,150,16,DispCirInfo->Text_UnitMeas,16,0,DispCirInfo->ColorInfo.Textcolor,DispCirInfo->ColorInfo.TextBackcolor);
 				Show_Str(DispCirInfo->x0+55,DispCirInfo->y0+15,150,16,"米",16,0,DispCirInfo->ColorInfo.Textcolor,DispCirInfo->ColorInfo.TextBackcolor);
 				Show_Str(DispCirInfo->x0-DispCirInfo->Xoff+15,DispCirInfo->y0+DispCirInfo->Yoff+13,150,16,DispCirInfo->Text_Name,16,0,DispCirInfo->ColorInfo.Textcolor,DispCirInfo->ColorInfo.TextBackcolor);
-			
 			}break;
 		case HCHO_ID:
 		case CARBON_ID:
@@ -816,34 +813,34 @@ void DispDataInfo(DispCirDef const *DispCirInfo,uint8_t Item)
 					case 1:
 					{
 						if(PreBitnum1 != 1)
-							LCD_Fill(DispCirInfo->x0,DispCirInfo->y0+70,DispCirInfo->x1,DispCirInfo->y0+100,RGB);
+							LCD_Fill(DispCirInfo->x0,DispCirInfo->y0+33,DispCirInfo->x1,DispCirInfo->y0+85,RGB);
 						PreBitnum1 = 1;
 						sprintf(buf,"%d",SensorData.PMData.PM2_5_S);
-						Show_Str(DispCirInfo->x0+46,DispCirInfo->y0+70,150,DispCirInfo->FontSize,buf,DispCirInfo->FontSize,0,BLACK,RGB);
+						Show_Str(DispCirInfo->x0+67,DispCirInfo->y0+34,150,DispCirInfo->FontSize,buf,DispCirInfo->FontSize,0,BLACK,RGB);
 					}break;
 					case 2:
 					{
 						if(PreBitnum1 != 2)
-							LCD_Fill(DispCirInfo->x0-13,DispCirInfo->y0+70,DispCirInfo->x0+113,DispCirInfo->y0+100,RGB);
+							LCD_Fill(DispCirInfo->x0,DispCirInfo->y0+33,DispCirInfo->x1,DispCirInfo->y0+85,RGB);
 						PreBitnum1 = 2;
 						sprintf(buf,"%d",SensorData.PMData.PM2_5_S);
-						Show_Str(DispCirInfo->x0+28,DispCirInfo->y0+70,150,DispCirInfo->FontSize,buf,DispCirInfo->FontSize,0,BLACK,RGB);
+						Show_Str(DispCirInfo->x0+47,DispCirInfo->y0+34,150,DispCirInfo->FontSize,buf,DispCirInfo->FontSize,0,BLACK,RGB);
 					}break;
 					case 3:
 					{
 						if(PreBitnum1 != 3)
-							LCD_Fill(DispCirInfo->x0-13,DispCirInfo->y0+70,DispCirInfo->x0+113,DispCirInfo->y0+100,RGB);
+							LCD_Fill(DispCirInfo->x0,DispCirInfo->y0+33,DispCirInfo->x1,DispCirInfo->y0+85,RGB);
 						PreBitnum1 = 3;
 						sprintf(buf,"%d",SensorData.PMData.PM2_5_S);
-						Show_Str(DispCirInfo->x0+13,DispCirInfo->y0+70,150,DispCirInfo->FontSize,buf,DispCirInfo->FontSize,0,BLACK,RGB);
+						Show_Str(DispCirInfo->x0+30,DispCirInfo->y0+34,150,DispCirInfo->FontSize,buf,DispCirInfo->FontSize,0,BLACK,RGB);
 					}break;
 					case 4:
 					{
 						if(PreBitnum1 != 4)
-							LCD_Fill(DispCirInfo->x0-13,DispCirInfo->y0+70,DispCirInfo->x0+113,DispCirInfo->y0+100,RGB);  
+							LCD_Fill(DispCirInfo->x0,DispCirInfo->y0+33,DispCirInfo->x1,DispCirInfo->y0+85,RGB);  
 						PreBitnum1 = 4;
 						sprintf(buf,"%d",SensorData.PMData.PM2_5_S);
-						Show_Str(DispCirInfo->x0-5,DispCirInfo->y0+70,150,DispCirInfo->FontSize,buf,DispCirInfo->FontSize,0,BLACK,RGB);
+						Show_Str(DispCirInfo->x0+13,DispCirInfo->y0+34,150,DispCirInfo->FontSize,buf,DispCirInfo->FontSize,0,BLACK,RGB);
 					}break;
 				}
 			}
@@ -864,7 +861,7 @@ void DispDataInfo(DispCirDef const *DispCirInfo,uint8_t Item)
 				if(Power_5V_IO_Status==0 && SensorOnline.Device.WZ_S==1)
 				{
 					sprintf(buf,"%d.%d%d",SensorData.HCHO/100,SensorData.HCHO/10%10,SensorData.HCHO%10);
-					Show_Str(DispCirInfo->x0-8,DispCirInfo->y0+70,150,DispCirInfo->FontSize,buf,DispCirInfo->FontSize,0,BLACK,RGB);
+					Show_Str(DispCirInfo->x0+13,DispCirInfo->y0+34,150,DispCirInfo->FontSize,buf,DispCirInfo->FontSize,0,BLACK,RGB);
 				}
 				else
 					Show_Str(DispCirInfo->x0+35,DispCirInfo->y0+55,150,24,"无数据",24,0,BLACK,RGB);  //未使能的话白底灰字
@@ -886,34 +883,34 @@ void DispDataInfo(DispCirDef const *DispCirInfo,uint8_t Item)
 						case 1:
 						{
 							if(PreBitnum3 != 1)
-								LCD_Fill(DispCirInfo->x0-13,DispCirInfo->y0+70,DispCirInfo->x0+113,DispCirInfo->y0+100,RGB);
+								LCD_Fill(DispCirInfo->x0,DispCirInfo->y0+33,DispCirInfo->x1,DispCirInfo->y0+85,RGB);
 							PreBitnum3 = 1;
 							sprintf(buf,"%01d",SensorData.PMData.PM1_0_S);
-							Show_Str(DispCirInfo->x0+46,DispCirInfo->y0+70,150,DispCirInfo->FontSize,buf,DispCirInfo->FontSize,0,BLACK,RGB);
+							Show_Str(DispCirInfo->x0+67,DispCirInfo->y0+34,150,DispCirInfo->FontSize,buf,DispCirInfo->FontSize,0,BLACK,RGB);
 						}break;
 						case 2:
 						{
 							if(PreBitnum3 != 2)
-								LCD_Fill(DispCirInfo->x0-13,DispCirInfo->y0+70,DispCirInfo->x0+113,DispCirInfo->y0+100,RGB);
+								LCD_Fill(DispCirInfo->x0,DispCirInfo->y0+33,DispCirInfo->x1,DispCirInfo->y0+85,RGB);
 							PreBitnum3 = 2;
 							sprintf(buf,"%02d",SensorData.PMData.PM1_0_S);
-							Show_Str(DispCirInfo->x0+28,DispCirInfo->y0+70,150,DispCirInfo->FontSize,buf,DispCirInfo->FontSize,0,BLACK,RGB);
+							Show_Str(DispCirInfo->x0+47,DispCirInfo->y0+34,150,DispCirInfo->FontSize,buf,DispCirInfo->FontSize,0,BLACK,RGB);
 						}break;
 						case 3:
 						{
 							if(PreBitnum3 != 3)
-								LCD_Fill(DispCirInfo->x0-13,DispCirInfo->y0+70,DispCirInfo->x0+113,DispCirInfo->y0+100,RGB);
+								LCD_Fill(DispCirInfo->x0,DispCirInfo->y0+33,DispCirInfo->x1,DispCirInfo->y0+85,RGB);
 							PreBitnum3 = 3;
 							sprintf(buf,"%03d",SensorData.PMData.PM1_0_S);
-							Show_Str(DispCirInfo->x0+13,DispCirInfo->y0+70,150,DispCirInfo->FontSize,buf,DispCirInfo->FontSize,0,BLACK,RGB);
+							Show_Str(DispCirInfo->x0+30,DispCirInfo->y0+34,150,DispCirInfo->FontSize,buf,DispCirInfo->FontSize,0,BLACK,RGB);
 						}break;
 						case 4:
 						{
 							if(PreBitnum3 != 4)
-								LCD_Fill(DispCirInfo->x0-13,DispCirInfo->y0+70,DispCirInfo->x0+113,DispCirInfo->y0+100,RGB);
+								LCD_Fill(DispCirInfo->x0,DispCirInfo->y0+33,DispCirInfo->x1,DispCirInfo->y0+85,RGB);
 							PreBitnum3 = 4;
 							sprintf(buf,"%04d",SensorData.PMData.PM1_0_S);
-							Show_Str(DispCirInfo->x0-5,DispCirInfo->y0+70,150,DispCirInfo->FontSize,buf,DispCirInfo->FontSize,0,BLACK,RGB);
+							Show_Str(DispCirInfo->x0+13,DispCirInfo->y0+34,150,DispCirInfo->FontSize,buf,DispCirInfo->FontSize,0,BLACK,RGB);
 						}break;
 						default:break;
 					}
@@ -954,7 +951,7 @@ void DispDataInfo(DispCirDef const *DispCirInfo,uint8_t Item)
 					case 1:
 					{
 						if(PreBitnum2 != 1)
-							LCD_Fill(DispCirInfo->x0-13,DispCirInfo->y0+70,DispCirInfo->x0+113,DispCirInfo->y0+100,RGB);
+							LCD_Fill(DispCirInfo->x0,DispCirInfo->y0+33,DispCirInfo->x1,DispCirInfo->y0+85,RGB);
 						PreBitnum2 = 1;
 						if((SysParaSetInfo.SensorSwitch&0X01)==0X01 && SensorOnline.Device.SENSAIR==1)
 						{
@@ -965,47 +962,47 @@ void DispDataInfo(DispCirDef const *DispCirInfo,uint8_t Item)
 							else
 							{
 								sprintf(buf,"%01d",SensorData.Carbon);
-								Show_Str(DispCirInfo->x0+46,DispCirInfo->y0+70,150,DispCirInfo->FontSize,buf,DispCirInfo->FontSize,0,BLACK,RGB);
+								Show_Str(DispCirInfo->x0+67,DispCirInfo->y0+34,150,DispCirInfo->FontSize,buf,DispCirInfo->FontSize,0,BLACK,RGB);
 							}
 						}
 						else if((SysParaSetInfo.SensorSwitch&0X01)!=0X01 && SensorOnline.Device.PMS_5==1)
 						{
 							sprintf(buf,"%01d",SensorData.PMData.PM10_S);
-							Show_Str(DispCirInfo->x0+46,DispCirInfo->y0+70,150,DispCirInfo->FontSize,buf,DispCirInfo->FontSize,0,BLACK,RGB);
+							Show_Str(DispCirInfo->x0+67,DispCirInfo->y0+34,150,DispCirInfo->FontSize,buf,DispCirInfo->FontSize,0,BLACK,RGB);
 						}
 					}break;
 					case 2:
 					{
 						if(PreBitnum2 != 2)
-							LCD_Fill(DispCirInfo->x0-13,DispCirInfo->y0+70,DispCirInfo->x0+113,DispCirInfo->y0+100,RGB);
+							LCD_Fill(DispCirInfo->x0,DispCirInfo->y0+33,DispCirInfo->x1,DispCirInfo->y0+85,RGB);
 						PreBitnum2 = 2;
 						if((SysParaSetInfo.SensorSwitch&0X01)==0X01  && SensorOnline.Device.SENSAIR==1)
 							sprintf(buf,"%02d",SensorData.Carbon);
 						else if((SysParaSetInfo.SensorSwitch&0X01)!=0X01 && SensorOnline.Device.PMS_5==1)
 							sprintf(buf,"%02d",SensorData.PMData.PM10_S);
-						Show_Str(DispCirInfo->x0+28,DispCirInfo->y0+70,150,DispCirInfo->FontSize,buf,DispCirInfo->FontSize,0,BLACK,RGB);
+						Show_Str(DispCirInfo->x0+47,DispCirInfo->y0+34,150,DispCirInfo->FontSize,buf,DispCirInfo->FontSize,0,BLACK,RGB);
 					}break;
 					case 3:
 					{
 						if(PreBitnum2 != 3)
-							LCD_Fill(DispCirInfo->x0-13,DispCirInfo->y0+70,DispCirInfo->x0+113,DispCirInfo->y0+100,RGB);
+							LCD_Fill(DispCirInfo->x0,DispCirInfo->y0+33,DispCirInfo->x1,DispCirInfo->y0+85,RGB);
 						PreBitnum2 = 3;
 						if((SysParaSetInfo.SensorSwitch&0X01)==0X01 && SensorOnline.Device.SENSAIR==1)
 							sprintf(buf,"%03d",SensorData.Carbon);
 						else if((SysParaSetInfo.SensorSwitch&0X01)!=0X01 && SensorOnline.Device.PMS_5==1)
 							sprintf(buf,"%03d",SensorData.PMData.PM10_S);
-						Show_Str(DispCirInfo->x0+13,DispCirInfo->y0+70,150,DispCirInfo->FontSize,buf,DispCirInfo->FontSize,0,BLACK,RGB);
+						Show_Str(DispCirInfo->x0+30,DispCirInfo->y0+34,150,DispCirInfo->FontSize,buf,DispCirInfo->FontSize,0,BLACK,RGB);
 					}break;
 					case 4:
 					{
 						if(PreBitnum2 != 4)
-							LCD_Fill(DispCirInfo->x0-13,DispCirInfo->y0+70,DispCirInfo->x0+113,DispCirInfo->y0+100,RGB);
+							LCD_Fill(DispCirInfo->x0,DispCirInfo->y0+33,DispCirInfo->x1,DispCirInfo->y0+85,RGB);
 						PreBitnum2 = 4;
 						if((SysParaSetInfo.SensorSwitch&0X01)==0X01 && SensorOnline.Device.SENSAIR==1)
 							sprintf(buf,"%04d",SensorData.Carbon);
 						else if((SysParaSetInfo.SensorSwitch&0X01)!=0X01 && SensorOnline.Device.PMS_5==1)
 							sprintf(buf,"%04d",SensorData.PMData.PM10_S);
-						Show_Str(DispCirInfo->x0-5,DispCirInfo->y0+70,150,DispCirInfo->FontSize,buf,DispCirInfo->FontSize,0,BLACK,RGB);
+						Show_Str(DispCirInfo->x0+13,DispCirInfo->y0+34,150,DispCirInfo->FontSize,buf,DispCirInfo->FontSize,0,BLACK,RGB);
 					}break;
 					default:break;
 				}
@@ -1280,12 +1277,12 @@ void DispTimeToUI(void)
 		}
 		if(CurrentVol > 1)
 		{
-			LCD_DrawRectangle(lcddev.width-40,8,lcddev.width-4,20,WHITE);  //画出基本的轮廓
-			LCD_Fill(lcddev.width-4,11,lcddev.width,16,WHITE);			//绘制电池顶部的小框
-			LCD_Fill(lcddev.width-39,9,lcddev.width-5,19,TOP_TITLE_BACK_COLOR);   		//清除电池
-			if(((uint16_t)CurrentVol*3)>35)  //防止超越边界
+			LCD_DrawRectangle(lcddev.width-40,8,lcddev.width-4,20,WHITE);  			//画出基本的轮廓
+			LCD_Fill(lcddev.width-4,11,lcddev.width,16,WHITE);						//绘制电池顶部的小框
+			LCD_Fill(lcddev.width-39,9,lcddev.width-5,19,TOP_TITLE_BACK_COLOR);   	//清除电池
+			if(((uint16_t)CurrentVol*3)>35)  										//防止超越边界
 				CurrentVol = 12;//35/(Multiple*3);
-			LCD_Fill(lcddev.width-39,9,lcddev.width-39+(uint16_t)CurrentVol*3+Multiple,19,LGRAY);  //横坐标不能大于30，框的横向像素范围
+			LCD_Fill(lcddev.width-39,9,lcddev.width-39+(uint16_t)CurrentVol*3,19,LGRAY);  //横坐标不能大于30，框的横向像素范围
 		}
 		else
 		{
@@ -1293,8 +1290,8 @@ void DispTimeToUI(void)
 			LCD_Fill(lcddev.width-4,11,lcddev.width,16,RED);			//绘制电池顶部的小框
 			LCD_Fill(lcddev.width-39,9,lcddev.width-5,19,TOP_TITLE_BACK_COLOR);   		//清除电池
 			if(((uint16_t)CurrentVol*3)>35)  //防止超越边界
-				CurrentVol = 12;//35/(Multiple*3);
-			LCD_Fill(lcddev.width-39,9,lcddev.width-39+(uint16_t)CurrentVol*3+Multiple,19,RED);  //横坐标不能大于30，框的横向像素范围
+				CurrentVol = 12;			 //35/(Multiple*3);
+			LCD_Fill(lcddev.width-39,9,lcddev.width-39+(uint16_t)CurrentVol*3,19,RED);  //横坐标不能大于30，框的横向像素范围
 		}
 	}
 }
@@ -1306,6 +1303,7 @@ void DispWeatherInfo(void)
 	{
 		AcuireFinishFlag = 0;
 		uint8_t buf[20];
+		LCD_Fill(280,15,365,34,TOP_TITLE_BACK_COLOR);
 		sprintf(buf,"当前城市:%s",NetWorkDataInfo.Weather_CityInfo);
 		Show_Str(271,0,150,16,buf,16,0,WEATHERINFO_COLOR,TOP_TITLE_BACK_COLOR);
 		sprintf(buf,"%s %s %d℃",NetWorkDataInfo.Time_Week,NetWorkDataInfo.Weather_Climate,NetWorkDataInfo.Weather_TempInfo);
@@ -1314,7 +1312,7 @@ void DispWeatherInfo(void)
 }
 //加载显示界面1
 void Load_ParaShow_Interface_1(void)
-{	
+{
 	uint8_t i;
 	uint8_t err;
 	int16_t Temp=0;
@@ -1329,7 +1327,7 @@ void Load_ParaShow_Interface_1(void)
 		LCD_DrawLine(0,35,CURSOR-22,35,LIGHTBLUE);	//下面的水平线
 		LCD_DrawLine(0,290,CURSOR-22,290,LIGHTBLUE);	//下面的水平线
 		LoadColorPat();   							//加载色谱和标度
-		Show_Str(0,3,100,24,BRAND_NAME,24,0,WHITE,TOP_TITLE_BACK_COLOR);  //显示商标
+		Show_Str(0,8,100,24,BRAND_NAME,24,0,WHITE,TOP_TITLE_BACK_COLOR);  //显示商标
 		if(AcuireFinishFlag == 0)
 			Show_Str(281,17,150,16,"无天气信息",16,0,GRAY,TOP_TITLE_BACK_COLOR);
 		DispWeatherInfo();

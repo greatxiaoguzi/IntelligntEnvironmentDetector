@@ -247,56 +247,10 @@ uint8_t Esp8266_Config(void)
 			Show_Str(260,170,200,16,"WIFI连接失败",16,0,RED,SET_SHOW_INTERFACE_RIGHT_BACKCOLOR);
 	}
 ////////////////////////////////////////////////////////////////////
-//	delay_ms(500);
-//	if(!Esp8266_SetSingleLink())
-//	{
-//		if(Current_Show_Interface == Curr_SetPara_Show && DispWifiInfoFlag)
-//			Show_Str(260,190,200,16,"设置单连成功",16,0,GREEN,SET_SHOW_INTERFACE_RIGHT_BACKCOLOR);
-//	}
-//	else
-//	{
-//		if(Current_Show_Interface == Curr_SetPara_Show && DispWifiInfoFlag)
-//		{
-//			Show_Str(260,190,200,16,"设置单连失败",16,0,RED,SET_SHOW_INTERFACE_RIGHT_BACKCOLOR);
-//			Encoder_Type = ENCODER_PRESSED;
-//		}
-//		return 1;
-//	}
-//	if(!Esp8266_SetPassThrough(1))
-//	{
-//		if(Current_Show_Interface == Curr_SetPara_Show && DispWifiInfoFlag)
-//			Show_Str(260,190,200,16,"设置透传成功",16,0,SET_SHOW_INTERFACE_RIGHT_TEXTCOLOR,SET_SHOW_INTERFACE_RIGHT_BACKCOLOR);
-//	}
-//	else
-//	{
-//		if(Current_Show_Interface == Curr_SetPara_Show && DispWifiInfoFlag)
-//		{
-//			Show_Str(260,190,200,16,"设置透传失败",16,0,RED,SET_SHOW_INTERFACE_RIGHT_BACKCOLOR);
-//			Encoder_Type = ENCODER_PRESSED;
-//		}
-//		return 1;
-//	}
 	if(AcuireFinishFlag==0 && Current_Show_Interface != Curr_Set_Show)  			//在设置参数的情况下不进入
 	{
 		Esp8266_QuitPassThroughLinkServer();
 		Esp8266_SetPassThrough(1);
-		for(uint8_t i=0;i<4;i++)
-		{
-			if(!Esp8266GetBeijingInfo())
-			{
-				TimeAcquireStatus = 1;
-				break;
-			}
-			else
-			{
-				TimeAcquireStatus = 0;
-				continue;
-			}
-		}
-		Esp8266_QuitPassThroughLinkServer();
-		Esp8266_DisConectServer();
-		Esp8266_SetPassThrough(1);
-		//获取网络时间信息并且校准
 		for(uint8_t i=0;i<4;i++)
 		{
 			//获取天气信息
@@ -308,6 +262,23 @@ uint8_t Esp8266_Config(void)
 			else
 			{
 				WeatherAcquireStatus = 0;
+				continue;
+			}
+		}
+		Esp8266_QuitPassThroughLinkServer();
+		Esp8266_DisConectServer();
+		Esp8266_SetPassThrough(1);
+		//获取网络时间信息并且校准
+		for(uint8_t i=0;i<4;i++)
+		{
+			if(!Esp8266GetBeijingInfo())
+			{
+				TimeAcquireStatus = 1;
+				break;
+			}
+			else
+			{
+				TimeAcquireStatus = 0;
 				continue;
 			}
 		}
