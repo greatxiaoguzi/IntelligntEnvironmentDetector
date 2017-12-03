@@ -132,13 +132,13 @@ uint8_t LoadParaToEeprom(void)
 		return 1;
 	}
 	AT24CXX_Read(EEPROM_ADDR_ESP89266_SSID_SECRET,databuf,150);
-	Show_Str(80,180,300,16,databuf,16,0,WHITE,BLACK);
+	Show_Str(80,180,400,16,databuf,16,0,WHITE,BLACK);
 	AT24CXX_Read(EEPROM_ADDR_ESP89266_USERKEY,databuf,50);
-	Show_Str(80,205,300,16,databuf,16,0,WHITE,BLACK);
+	Show_Str(80,205,400,16,databuf,16,0,WHITE,BLACK);
 	AT24CXX_Read(EEPROM_ADDR_ESP89266_SVN,databuf,30);
-	Show_Str(80,230,300,16,databuf,16,0,WHITE,BLACK);
+	Show_Str(80,230,400,16,databuf,16,0,WHITE,BLACK);
 	AT24CXX_Read(EEPROM_ADDR_SYS_PARA_CITYINFO,databuf,30);
-	Show_Str(80,255,300,16,databuf,16,0,WHITE,BLACK);
+	Show_Str(80,255,400,16,databuf,16,0,WHITE,BLACK);
 	f_close(F_configdata);
 	myfree(F_configdata);
 	myfree(databuf);
@@ -166,15 +166,13 @@ uint8_t Esp8266_Config(void)
 		LCD_Fill(250,65,430,280,SET_SHOW_INTERFACE_RIGHT_BACKCOLOR);
     if(!Esp8266_ReStart())  //发送重新启动信号
     {
-		if(Current_Show_Interface==Curr_SetPara_Show && DispWifiInfoFlag)
-			Show_Str(260,70,200,16,"WIFI重启成功.",16,0,SET_SHOW_INTERFACE_RIGHT_TEXTCOLOR,SET_SHOW_INTERFACE_RIGHT_BACKCOLOR);
         Esp8266Config.WifiStartFlag = 1;
     }
 	else
 	{
 		if(Current_Show_Interface==Curr_SetPara_Show && DispWifiInfoFlag)
 		{
-			Show_Str(260,70,200,16,"WIFI重启失败.",16,0,RED,SET_SHOW_INTERFACE_RIGHT_BACKCOLOR);
+			Show_Str(300,200,200,16,"WIFI重启失败.",16,0,RED,SET_SHOW_INTERFACE_RIGHT_BACKCOLOR);
 			Encoder_Type = ENCODER_PRESSED;
 		}
         Esp8266Config.WifiStartFlag = 0;
@@ -185,14 +183,13 @@ uint8_t Esp8266_Config(void)
 	delay_ms(1000);
     if(!Esp8266_SetMode(1))   //设置模式(AP和STA共存模式)
 	{
-		if(Current_Show_Interface==Curr_SetPara_Show && DispWifiInfoFlag)
-			Show_Str(260,90,200,16,"TCP模式设置成功.",16,0,SET_SHOW_INTERFACE_RIGHT_TEXTCOLOR,SET_SHOW_INTERFACE_RIGHT_BACKCOLOR);
+		
 	}
 	else
 	{
 		if(Current_Show_Interface==Curr_SetPara_Show && DispWifiInfoFlag)
 		{
-			Show_Str(260,90,200,16,"TCP模式设置失败.",16,0,RED,SET_SHOW_INTERFACE_RIGHT_BACKCOLOR);
+			Show_Str(300,200,200,16,"TCP模式设置失败.",16,0,RED,SET_SHOW_INTERFACE_RIGHT_BACKCOLOR);
 			Encoder_Type = ENCODER_PRESSED;
 		}
 		Esp8266InitFinishFlag = 1;
@@ -200,31 +197,21 @@ uint8_t Esp8266_Config(void)
 	}
 	delay_ms(2000);
     //开始配置WIFI模块
-	if(Current_Show_Interface==Curr_SetPara_Show && DispWifiInfoFlag)
-		Show_Str(260,150,200,16,"WIFI设置中...",16,0,SET_SHOW_INTERFACE_RIGHT_TEXTCOLOR,SET_SHOW_INTERFACE_RIGHT_BACKCOLOR);
 	while(LinkTimes<2) //最多连3次
 	{
 		 LinkTimes ++;
 		 if(!WifiNETSet()&&SuccesFlag==0)      //进入设置，如果设置成功的话，执行相应部分
 		 {
              SuccesFlag = 1;
-			 if(Current_Show_Interface==Curr_SetPara_Show && DispWifiInfoFlag)
-				Show_Str(260,150,200,16,"WIFI设置成功",16,0,SET_SHOW_INTERFACE_RIGHT_TEXTCOLOR,SET_SHOW_INTERFACE_RIGHT_BACKCOLOR);
 		 }
 		 else
 		 {
-			 if(Current_Show_Interface==Curr_SetPara_Show && DispWifiInfoFlag)
-				Show_Str(260,150,200,16,"重新设置中.",16,0,SET_SHOW_INTERFACE_RIGHT_TEXTCOLOR,SET_SHOW_INTERFACE_RIGHT_BACKCOLOR);
 		 }
 		 if(SuccesFlag==1)             //连接成功的话
 		 {
-			 if(Current_Show_Interface==Curr_SetPara_Show && DispWifiInfoFlag)
-				Show_Str(260,170,200,16,"WIFI连接中...",16,0,SET_SHOW_INTERFACE_RIGHT_TEXTCOLOR,SET_SHOW_INTERFACE_RIGHT_BACKCOLOR);
 				if(!Esp8266_ConnectWire())   //开始连接WIFI，连接成功的话
 				{
 					Esp8266Config.WifiLinkSuccFlag = 1;  //标志WIFI连接成功
-					if(Current_Show_Interface==Curr_SetPara_Show && DispWifiInfoFlag)
-						Show_Str(260,170,200,16,"WIFI连接成功",16,0,SET_SHOW_INTERFACE_RIGHT_TEXTCOLOR,SET_SHOW_INTERFACE_RIGHT_BACKCOLOR);
 					for(i=0;i<2;i++)
 					{
 						 LED0 = !LED0;
@@ -237,14 +224,14 @@ uint8_t Esp8266_Config(void)
 					SuccesFlag=0;
 					Esp8266Config.WifiLinkSuccFlag = 0;
 					if(Current_Show_Interface==Curr_SetPara_Show && DispWifiInfoFlag)
-						Show_Str(260,170,200,16,"WIFI连接失败",16,0,RED,SET_SHOW_INTERFACE_RIGHT_BACKCOLOR);
+						Show_Str(300,200,200,16,"WIFI连接失败",16,0,RED,SET_SHOW_INTERFACE_RIGHT_BACKCOLOR);
 				}
 		 }
 	}
 	if(LinkTimes>=3)
 	{
 		if(Current_Show_Interface==Curr_SetPara_Show && DispWifiInfoFlag)
-			Show_Str(260,170,200,16,"WIFI连接失败",16,0,RED,SET_SHOW_INTERFACE_RIGHT_BACKCOLOR);
+			Show_Str(300,200,200,16,"WIFI连接失败",16,0,RED,SET_SHOW_INTERFACE_RIGHT_BACKCOLOR);
 	}
 ////////////////////////////////////////////////////////////////////
 	if(AcuireFinishFlag==0 && Current_Show_Interface != Curr_Set_Show)  			//在设置参数的情况下不进入
@@ -288,21 +275,17 @@ uint8_t Esp8266_Config(void)
 		AcuireFinishFlag = 1;
 	}
 	//LCD_Clear(BLACK);   //清屏
-	if(Current_Show_Interface==Curr_SetPara_Show && DispWifiInfoFlag)
-		Show_Str(260,210,200,16,"服务器连接中...",16,0,SET_SHOW_INTERFACE_RIGHT_TEXTCOLOR,SET_SHOW_INTERFACE_RIGHT_BACKCOLOR);
 	ErrorType = ReadServerPar();
 	if(!ErrorType)   //从EEPROM读取服务器传参数
 	{
 		if(!Esp8266_ConectServer(UP_LOAD_SENSOR_DATA_MODE))
 		{
-			if(Current_Show_Interface==Curr_SetPara_Show && DispWifiInfoFlag)
-				Show_Str(260,210,200,16,"服务器连接成功",16,0,SET_SHOW_INTERFACE_RIGHT_TEXTCOLOR,SET_SHOW_INTERFACE_RIGHT_BACKCOLOR);
 		}
 		else
 		{
 			if(Current_Show_Interface==Curr_SetPara_Show && DispWifiInfoFlag)
 			{
-				Show_Str(260,210,200,16,"服务器连接失败",16,0,RED,SET_SHOW_INTERFACE_RIGHT_BACKCOLOR);
+				Show_Str(300,200,200,16,"服务器连接失败",16,0,RED,SET_SHOW_INTERFACE_RIGHT_BACKCOLOR);
 				Encoder_Type = ENCODER_PRESSED;
 			}
 			delay_ms(500);
@@ -313,7 +296,7 @@ uint8_t Esp8266_Config(void)
 	else
 	{
 		if(Current_Show_Interface==Curr_SetPara_Show && DispWifiInfoFlag)
-			Show_Str(60,30,200,16,"参数读取错误  ",16,0,RED,SET_SHOW_INTERFACE_RIGHT_BACKCOLOR);
+			Show_Str(300,200,200,16,"参数读取错误  ",16,0,RED,SET_SHOW_INTERFACE_RIGHT_BACKCOLOR);
 		//LCD_ShowNum(60,30,ErrorType,2,16,RED,BLACK);
 	}
 	if(PkgURL(2,(uint8_t*)UserKey))

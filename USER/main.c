@@ -97,6 +97,10 @@ int main(void)
 		LCD_ShowString(100,120,100,16,16,"SD Init Fail!",RED,BLACK);
 	InitHardware();   							//初始化传感器硬件部分及存储器部分
 	ReadSetPara();    							//配置设置参数*/ 
+	while(1)
+	{
+		MenuOperate();
+	}
 	IWDG_Init(4,6250);
 //	while(1)
 //	{

@@ -74,7 +74,12 @@ extern uint8_t CloseMachineFlag;
 SysSetPara_TypeDef SysParaSetInfo;   		//系统设置参数信息
 SensorOnlineStat_TypeDef SensorOnline;      //传感器在线状态
 int16_t BackLightBright = 0;
-DataRemember_TypeDef DataRemember_Hour;
+DataRemember_TypeDef DataRemember_Hour = 
+{
+	{3,4,5,8,3,5,8,9,7,8},
+	{345,223,235,573,565,422,789,545,777,555},
+	{34,56,35,67,46,67,89,3,45,34}
+};
 
 static uint32_t SD_Write_Times = 0;  //写sd卡时的便宜量
 uint8_t StandbyMode = 0;
@@ -111,7 +116,7 @@ static uint16_t CurrThemeColorFlag[3] = {0,0,0};  //更行主题背景的颜色
 static uint16_t PreThemeColorFlag[3] = {0,0,0};
 uint8_t AlarmCloseFlag = 0;   //闹钟关闭标志,分别关闭对应数据的闹钟，只关闭当前的，不保存参数
 const uint16_t ValueTab[] = {0,35,75,115,150,250,500};//色条上的数值
-uint8_t Draw_Wave_Flag = 0;  //绘制每5分钟记录的波形防止每次都绘制全部
+uint8_t Draw_Wave_Flag = 10;  //绘制每5分钟记录的波形防止每次都绘制全部
 
 const DispCirDef AllDispCirInfo[6]=
 {      //这里长和宽用外圆和内圆代替
@@ -283,64 +288,64 @@ void LoadColorPat(void)
 	uint16_t i=0;
 	//uint16_t color;
 	//uint16_t Ri=0,Gi=0,Bi=0;
-	uint16_t ystep = (lcddev.height-53)/6;  				//改变色谱的长度改这里
+	uint16_t ystep = (lcddev.height-58)/6;  				//改变色谱的长度改这里
 	Show_Str(CURSOR-21,270,18,16,(uint8_t*)QualityGrade[0],16,0,GREEN,FillColor);  //标度
-	LCD_Fill(CURSOR+5,lcddev.height-30,CURSOR+19,lcddev.height-30-ystep,GREEN);
+	LCD_Fill(CURSOR+5,lcddev.height-31,CURSOR+19,lcddev.height-30-ystep,GREEN);
 
-	Show_Str(CURSOR-21,300-30-ystep,18,16,(uint8_t*)QualityGrade[1],16,0,YELLOW,FillColor);
-	LCD_Fill(CURSOR+5,lcddev.height-30-ystep,CURSOR+19,lcddev.height-30-ystep*2,YELLOW);
+	Show_Str(CURSOR-21,300-31-ystep,18,16,(uint8_t*)QualityGrade[1],16,0,YELLOW,FillColor);
+	LCD_Fill(CURSOR+5,lcddev.height-31-ystep,CURSOR+19,lcddev.height-30-ystep*2,YELLOW);
 
-	Show_Str(CURSOR-21,300-30-ystep*2,18,16,(uint8_t*)QualityGrade[2],16,0,ORANGE,FillColor);
-	LCD_Fill(CURSOR+5,lcddev.height-30-ystep*2,CURSOR+19,lcddev.height-30-ystep*3,ORANGE);
+	Show_Str(CURSOR-21,300-31-ystep*2,18,16,(uint8_t*)QualityGrade[2],16,0,ORANGE,FillColor);
+	LCD_Fill(CURSOR+5,lcddev.height-31-ystep*2,CURSOR+19,lcddev.height-30-ystep*3,ORANGE);
 
-	Show_Str(CURSOR-21,300-30-ystep*3,18,16,(uint8_t*)QualityGrade[3],16,0,RED,FillColor);
-	LCD_Fill(CURSOR+5,lcddev.height-30-ystep*3,CURSOR+19,lcddev.height-30-ystep*4,RED);
+	Show_Str(CURSOR-21,300-31-ystep*3,18,16,(uint8_t*)QualityGrade[3],16,0,RED,FillColor);
+	LCD_Fill(CURSOR+5,lcddev.height-31-ystep*3,CURSOR+19,lcddev.height-30-ystep*4,RED);
 
-	Show_Str(CURSOR-21,300-30-ystep*4,18,16,(uint8_t*)QualityGrade[4],16,0,PURPLE,FillColor);
-	LCD_Fill(CURSOR+5,lcddev.height-30-ystep*4,CURSOR+19,lcddev.height-30-ystep*5,PURPLE);
+	Show_Str(CURSOR-21,300-31-ystep*4,18,16,(uint8_t*)QualityGrade[4],16,0,PURPLE,FillColor);
+	LCD_Fill(CURSOR+5,lcddev.height-31-ystep*4,CURSOR+19,lcddev.height-30-ystep*5,PURPLE);
 
-	Show_Str(CURSOR-21,300-30-ystep*5,18,16,(uint8_t*)QualityGrade[5],16,0,MAROON,FillColor);
-	LCD_Fill(CURSOR+5,lcddev.height-30-ystep*5,CURSOR+19,lcddev.height-30-ystep*6,MAROON);
+	Show_Str(CURSOR-21,300-31-ystep*5,18,16,(uint8_t*)QualityGrade[5],16,0,MAROON,FillColor);
+	LCD_Fill(CURSOR+5,lcddev.height-31-ystep*5,CURSOR+19,lcddev.height-30-ystep*6,MAROON);
 }
 //绘制动态的红色指示点
 void DrawDynamicCir(uint16_t AQIValue,uint16_t color)
 {
 	uint8_t static PreStage = 6;
-	uint16_t ystep = (lcddev.height-53)/6;
+	uint16_t ystep = (lcddev.height-58)/6;
 	if(AQIValue<=50 && AQIValue >=0 && PreStage!=1)  //等级1
 	{
-		LCD_Fill(CURSOR-3,lcddev.height-30-ystep*(PreStage-1),CURSOR+2,lcddev.height-30-ystep*PreStage+1,FillColor);
-		LCD_Fill(CURSOR-3,lcddev.height-30,CURSOR+2,lcddev.height-30-ystep+1,color);
+		LCD_Fill(CURSOR-3,lcddev.height-31-ystep*(PreStage-1),CURSOR+2,lcddev.height-31-ystep*PreStage+1,FillColor);
+		LCD_Fill(CURSOR-3,lcddev.height-31,CURSOR+2,lcddev.height-31-ystep+1,color);
 		PreStage = 1;
 	}
 	else if(AQIValue<=100 && AQIValue>50 && PreStage!=2)//等级2
 	{
-		LCD_Fill(CURSOR-3,lcddev.height-30-ystep*(PreStage-1),CURSOR+2,lcddev.height-30-ystep*PreStage+1,FillColor);
-		LCD_Fill(CURSOR-3,lcddev.height-30-ystep,CURSOR+2,lcddev.height-30-ystep*2+1,color);
+		LCD_Fill(CURSOR-3,lcddev.height-31-ystep*(PreStage-1),CURSOR+2,lcddev.height-31-ystep*PreStage+1,FillColor);
+		LCD_Fill(CURSOR-3,lcddev.height-31-ystep,CURSOR+2,lcddev.height-31-ystep*2+1,color);
 		PreStage = 2;
 	}
 	else if(AQIValue<=150 && AQIValue>100 && PreStage!=3)//等级3
 	{
-		LCD_Fill(CURSOR-3,lcddev.height-30-ystep*(PreStage-1),CURSOR+2,lcddev.height-30-ystep*PreStage+1,FillColor);
-		LCD_Fill(CURSOR-3,lcddev.height-30-ystep*2,CURSOR+2,lcddev.height-30-ystep*3+1,color);
+		LCD_Fill(CURSOR-3,lcddev.height-31-ystep*(PreStage-1),CURSOR+2,lcddev.height-31-ystep*PreStage+1,FillColor);
+		LCD_Fill(CURSOR-3,lcddev.height-31-ystep*2,CURSOR+2,lcddev.height-31-ystep*3+1,color);
 		PreStage = 3;
 	}
 	else if(AQIValue<=200 && AQIValue>150 && PreStage!=4)//等级4
 	{
-		LCD_Fill(CURSOR-3,lcddev.height-30-ystep*(PreStage-1),CURSOR+2,lcddev.height-30-ystep*PreStage+1,FillColor);
-		LCD_Fill(CURSOR-3,lcddev.height-30-ystep*3,CURSOR+2,lcddev.height-30-ystep*4+1,color);
+		LCD_Fill(CURSOR-3,lcddev.height-31-ystep*(PreStage-1),CURSOR+2,lcddev.height-31-ystep*PreStage+1,FillColor);
+		LCD_Fill(CURSOR-3,lcddev.height-31-ystep*3,CURSOR+2,lcddev.height-31-ystep*4+1,color);
 		PreStage = 4;
 	}
 	else if(AQIValue<=300 && AQIValue>200 && PreStage!=5)//等级5
 	{
-		LCD_Fill(CURSOR-3,lcddev.height-30-ystep*(PreStage-1),CURSOR+2,lcddev.height-30-ystep*PreStage+1,FillColor);
-		LCD_Fill(CURSOR-3,lcddev.height-30-ystep*4,CURSOR+2,lcddev.height-30-ystep*5+1,color);
+		LCD_Fill(CURSOR-3,lcddev.height-31-ystep*(PreStage-1),CURSOR+2,lcddev.height-31-ystep*PreStage+1,FillColor);
+		LCD_Fill(CURSOR-3,lcddev.height-31-ystep*4,CURSOR+2,lcddev.height-31-ystep*5+1,color);
 		PreStage = 5;
 	}
 	else if(AQIValue>300 && PreStage!=6)//等级6
 	{
-		LCD_Fill(CURSOR-3,lcddev.height-30-ystep*(PreStage-1),CURSOR+2,lcddev.height-30-ystep*PreStage+1,FillColor);
-		LCD_Fill(CURSOR-3,lcddev.height-30-ystep*5,CURSOR+2,lcddev.height-30-ystep*6+1,color);
+		LCD_Fill(CURSOR-3,lcddev.height-31-ystep*(PreStage-1),CURSOR+2,lcddev.height-31-ystep*PreStage+1,FillColor);
+		LCD_Fill(CURSOR-3,lcddev.height-31-ystep*5,CURSOR+2,lcddev.height-31-ystep*6+1,color);
 		PreStage = 6;
 	}
 }
@@ -514,10 +519,10 @@ void EnvirQuaty(uint16_t x,uint16_t y)
 	//uint16_t RGB;
 	uint16_t USASt_Value;   //美标值
     Cal_USASt_Value(SensorData.PMData.PM2_5_S,&AQI_Value,&USASt_Value);
-	Show_Str(80,11,300,24,"AQI:",24,0,AQI_COLOR,TOP_TITLE_BACK_COLOR);
-	Show_Str(165,10,300,24,"美标:",24,0,AQI_COLOR,TOP_TITLE_BACK_COLOR);
-    LCD_ShowNum(128,11,AQI_Value,3,24,0,AQI_COLOR,TOP_TITLE_BACK_COLOR);
-	LCD_ShowNum(223,11,USASt_Value,3,24,0,AQI_COLOR,TOP_TITLE_BACK_COLOR);
+	Show_Str(80,3,300,24,"AQI:",24,0,AQI_COLOR,TOP_TITLE_BACK_COLOR);
+	Show_Str(165,2,300,24,"美标:",24,0,AQI_COLOR,TOP_TITLE_BACK_COLOR);
+    LCD_ShowNum(128,3,AQI_Value,3,24,0,AQI_COLOR,TOP_TITLE_BACK_COLOR);
+	LCD_ShowNum(223,3,USASt_Value,3,24,0,AQI_COLOR,TOP_TITLE_BACK_COLOR);
 	if(SysParaSetInfo.Power_5V_Status)
 		DrawDynamicCir(AQI_Value,WHITE);
 	else
@@ -1099,7 +1104,7 @@ void Save_Hour_Data(uint8_t Order)
 //150  64
 void Ctrl_Switch_Staus(uint16_t xoffset,uint16_t yoffset)
 {
-	Show_Str(5,yoffset+5,200,16,"报警开关状态:",16,0,WHITE,BOTTOM_TITTLE_BACK_COLOR);
+	Show_Str(5,yoffset+3,200,16,"报警开关状态:",16,0,WHITE,BOTTOM_TITTLE_BACK_COLOR);
 	LCD_DrawRectangle(lcddev.width-xoffset,yoffset+3,lcddev.width-xoffset+86,yoffset+20,WHITE); // 150  6
 	if((SysParaSetInfo.ThresHoldStatus.SensorAlarmStatus&0X10) == 0X10)
 	{
@@ -1229,11 +1234,11 @@ void DispTimeToUI(void)
 	uint8_t buf[15];
 	static uint8_t CreateNewFlag = 0;   //每隔一天创建新的文件名标志
 	static uint8_t SaveFlag = 0;
-	if((SysTimeData.Minute%5)==0 && SaveFlag!=SysTimeData.Minute)  //5分钟执行一次
+	if((SysTimeData.Minute%2)==0 && SaveFlag!=SysTimeData.Minute)  //5分钟执行一次
 	{
 		SaveFlag = SysTimeData.Minute;
 		Save_Hour_Data(Draw_Wave_Flag++);		//用于在波形绘制函数里面判断用
-		if(Draw_Wave_Flag == 15)
+		if(Draw_Wave_Flag == 36)   //一共36个标格
 		{
 			Draw_Wave_Flag = 0;
 			memset(&DataRemember_Hour.HCHO[0],0,60); 		//清零
@@ -1302,12 +1307,10 @@ void DispWeatherInfo(void)
 	if(AcuireFinishFlag == 1)
 	{
 		AcuireFinishFlag = 0;
-		uint8_t buf[20];
-		LCD_Fill(280,15,365,34,TOP_TITLE_BACK_COLOR);
-		sprintf(buf,"当前城市:%s",NetWorkDataInfo.Weather_CityInfo);
-		Show_Str(271,0,150,16,buf,16,0,WEATHERINFO_COLOR,TOP_TITLE_BACK_COLOR);
-		sprintf(buf,"%s %s %d℃",NetWorkDataInfo.Time_Week,NetWorkDataInfo.Weather_Climate,NetWorkDataInfo.Weather_TempInfo);
-		Show_Str(277,17,150,16,buf,16,0,WEATHERINFO_COLOR,TOP_TITLE_BACK_COLOR);
+		uint8_t buf[40];
+		LCD_Fill(261,0,400,34,TOP_TITLE_BACK_COLOR);
+		sprintf(buf,"%s %s %s %d℃",NetWorkDataInfo.Weather_CityInfo,NetWorkDataInfo.Time_Week,NetWorkDataInfo.Weather_Climate,NetWorkDataInfo.Weather_TempInfo);
+		Show_Str(261,9,150,26,buf,16,0,WEATHERINFO_COLOR,TOP_TITLE_BACK_COLOR);
 	}
 }
 //加载显示界面1
@@ -1317,21 +1320,26 @@ void Load_ParaShow_Interface_1(void)
 	uint8_t err;
 	int16_t Temp=0;
 	uint16_t Cnt = 0;
-	LCD_Fill(0,36,CURSOR-22,289,PARA_SHOW_INTERFACE_BACKCOLOR);  //清楚显示板显示的传感器数据的内容
+	LCD_Fill(0,28,480,289,PARA_SHOW_INTERFACE_BACKCOLOR);  //清楚显示板显示的传感器数据的内容
 	if(LoadStaticUIFlag == 0)
 	{
 		LoadStaticUIFlag = 1;
 		//LCD_Fill(CURSOR-21,27,480,320,FillColor);  	//右边的长条底色
-		//LCD_Fill(0,0,480,25,TOP_TITLE_BACK_COLOR);			//顶部的标题部分
+		//LCD_Fill(0,0,480,27,TOP_TITLE_BACK_COLOR);			//顶部的标题部分
 		//LCD_Fill(0,290,480,320,BOTTOM_TITTLE_BACK_COLOR);		//底部的标题背景色
-		LCD_DrawLine(0,35,CURSOR-22,35,LIGHTBLUE);	//下面的水平线
-		LCD_DrawLine(0,290,CURSOR-22,290,LIGHTBLUE);	//下面的水平线
-		LoadColorPat();   							//加载色谱和标度
-		Show_Str(0,8,100,24,BRAND_NAME,24,0,WHITE,TOP_TITLE_BACK_COLOR);  //显示商标
+		
+		LCD_FillRoundFrame(0,0,478,27,10,TOP_TITLE_BACK_COLOR);
+		LCD_FillRoundFrame(0,290,478,320,10,BOTTOM_TITTLE_BACK_COLOR);
+		
+		//LCD_DrawLine(0,35,CURSOR-22,35,LIGHTBLUE);	//下面的水平线
+		//LCD_DrawLine(0,290,CURSOR-22,290,LIGHTBLUE);	//下面的水平线
+		//LoadColorPat();   							//加载色谱和标度
+		Show_Str(7,0,100,24,BRAND_NAME,24,0,WHITE,TOP_TITLE_BACK_COLOR);  //显示商标
 		if(AcuireFinishFlag == 0)
-			Show_Str(281,17,150,16,"无天气信息",16,0,GRAY,TOP_TITLE_BACK_COLOR);
+			Show_Str(281,9,150,16,"无天气信息",16,0,GRAY,TOP_TITLE_BACK_COLOR);
 		DispWeatherInfo();
 	}
+	LoadColorPat();   							//加载色谱和标度
 	Ctrl_Switch_Staus(360,296);	  //从右边往左边便宜坐标
 	for(i=0;i<6;i++)
 	{
@@ -1427,7 +1435,7 @@ void Load_ParaShow_Interface_1(void)
 //加载界面2要显示的静态UI
 void Load_UI2_Static(uint16_t x,uint16_t y,uint16_t unit)
 {
-	LCD_Fill(0,36,CURSOR-22,289,PMCNT_SHOW_INTERFACE_BACKCOLOR);  //清楚显示板显示的传感器数据的内容
+	LCD_Fill(0,28,480,289,PMCNT_SHOW_INTERFACE_BACKCOLOR);  //清楚显示板显示的传感器数据的内容
 	//LCD_DrawLine(0,27,CURSOR-22,27,BLUE);
 	//显示浓度值的UI
 	Show_Str(x+50,y,300,24,"浓度值",24,0,C_THISTLE,BLACK);  
@@ -1447,19 +1455,19 @@ void Load_UI2_Static(uint16_t x,uint16_t y,uint16_t unit)
 	Show_Str(x+135,y+unit*5,300,24,"ppm",24,0,LIGHTBLUE,PMCNT_SHOW_INTERFACE_BACKCOLOR);
 	//显示颗粒物的UI
 	
-	Show_Str(240+x,y+unit,300,24,">0.3um:",24,0,C_ORANGE_RED,PMCNT_SHOW_INTERFACE_BACKCOLOR);
-	Show_Str(240+x,y+unit*2,300,24,">0.5um:",24,0,C_ORANGE_RED,PMCNT_SHOW_INTERFACE_BACKCOLOR);
-	Show_Str(240+x,y+unit*3,300,24,">1.0um:",24,0,C_ORANGE_RED,PMCNT_SHOW_INTERFACE_BACKCOLOR);
-	Show_Str(240+x,y+unit*4,300,24,">2.5um:",24,0,C_ORANGE_RED,PMCNT_SHOW_INTERFACE_BACKCOLOR);
-	Show_Str(240+x,y+unit*5,300,24,">5.0um:",24,0,C_ORANGE_RED,PMCNT_SHOW_INTERFACE_BACKCOLOR);
-	Show_Str(240+x,y+unit*6,300,24,">10um:",24,0,C_ORANGE_RED,PMCNT_SHOW_INTERFACE_BACKCOLOR);
+	Show_Str(255+x,y+unit,300,24,">0.3um:",24,0,C_ORANGE_RED,PMCNT_SHOW_INTERFACE_BACKCOLOR);
+	Show_Str(255+x,y+unit*2,300,24,">0.5um:",24,0,C_ORANGE_RED,PMCNT_SHOW_INTERFACE_BACKCOLOR);
+	Show_Str(255+x,y+unit*3,300,24,">1.0um:",24,0,C_ORANGE_RED,PMCNT_SHOW_INTERFACE_BACKCOLOR);
+	Show_Str(255+x,y+unit*4,300,24,">2.5um:",24,0,C_ORANGE_RED,PMCNT_SHOW_INTERFACE_BACKCOLOR);
+	Show_Str(255+x,y+unit*5,300,24,">5.0um:",24,0,C_ORANGE_RED,PMCNT_SHOW_INTERFACE_BACKCOLOR);
+	Show_Str(255+x,y+unit*6,300,24,">10um:",24,0,C_ORANGE_RED,PMCNT_SHOW_INTERFACE_BACKCOLOR);
 	
-	Show_Str(240+x+150,y+unit,300,24,"个",24,0,LIGHTBLUE,PMCNT_SHOW_INTERFACE_BACKCOLOR);
-	Show_Str(240+x+150,y+unit*2,300,24,"个",24,0,LIGHTBLUE,PMCNT_SHOW_INTERFACE_BACKCOLOR);
-	Show_Str(240+x+150,y+unit*3,300,24,"个",24,0,LIGHTBLUE,PMCNT_SHOW_INTERFACE_BACKCOLOR);
-	Show_Str(240+x+150,y+unit*4,300,24,"个",24,0,LIGHTBLUE,PMCNT_SHOW_INTERFACE_BACKCOLOR);
-	Show_Str(240+x+150,y+unit*5,300,24,"个",24,0,LIGHTBLUE,PMCNT_SHOW_INTERFACE_BACKCOLOR);
-	Show_Str(240+x+150,y+unit*6,300,24,"个",24,0,LIGHTBLUE,PMCNT_SHOW_INTERFACE_BACKCOLOR);
+	Show_Str(255+x+150,y+unit,300,24,"个",24,0,LIGHTBLUE,PMCNT_SHOW_INTERFACE_BACKCOLOR);
+	Show_Str(255+x+150,y+unit*2,300,24,"个",24,0,LIGHTBLUE,PMCNT_SHOW_INTERFACE_BACKCOLOR);
+	Show_Str(255+x+150,y+unit*3,300,24,"个",24,0,LIGHTBLUE,PMCNT_SHOW_INTERFACE_BACKCOLOR);
+	Show_Str(255+x+150,y+unit*4,300,24,"个",24,0,LIGHTBLUE,PMCNT_SHOW_INTERFACE_BACKCOLOR);
+	Show_Str(255+x+150,y+unit*5,300,24,"个",24,0,LIGHTBLUE,PMCNT_SHOW_INTERFACE_BACKCOLOR);
+	Show_Str(255+x+150,y+unit*6,300,24,"个",24,0,LIGHTBLUE,PMCNT_SHOW_INTERFACE_BACKCOLOR);
 }
 //加载界面2要动态显示的数据值
 void Load_UI2_Dynamic(uint16_t x,uint16_t y,uint16_t unit)
@@ -1523,42 +1531,45 @@ void Load_WaveformShow_Interface_3(void)
 	static uint8_t RefreshFlag = 0;  //波形刷新标志 
 	//uint8_t HCHO;
 	//uint16_t CO2,PM;
-	LCD_Fill(0,36,CURSOR-22,289,WAVE_SHOW_INTERFACE_BACKCOLOR);  //清楚显示板显示的传感器数据的内容
+	LCD_Fill(0,28,480,289,WAVE_SHOW_INTERFACE_BACKCOLOR);  //清楚显示板显示的传感器数据的内容
 	
 	Show_Str(0,267,80,16,"PM2.5",16,0,LIGHTBLUE,WAVE_SHOW_INTERFACE_BACKCOLOR);    //家在出全部的时间参数
 	Show_Str(0,198,80,16,"HCHO",16,0,LIGHTBLUE,WAVE_SHOW_INTERFACE_BACKCOLOR);    //家在出全部的时间参数
 	Show_Str(0,121,80,16,"CO2",16,0,LIGHTBLUE,WAVE_SHOW_INTERFACE_BACKCOLOR);    //家在出全部的时间参数
 	//绘制坐标轴                                       起点坐标
-	LCD_DrawLine(40,275, CURSOR-40,275,WHITE);  //X轴   PM2.5 Y轴起点开始坐标
+	LCD_DrawLine(40,275, 480,275,WHITE);  //X轴   PM2.5 Y轴起点开始坐标
 	LCD_DrawLine(40,275, 40,36,WHITE);          //Y轴
-	LCD_DrawLine(40,206, CURSOR-40,206,WHITE);  //X轴   HCHO
-	LCD_DrawLine(40,129, CURSOR-40,129,WHITE);  //X轴   CO2
+	LCD_DrawLine(40,206, 480,206,WHITE);  //X轴   HCHO
+	LCD_DrawLine(40,129, 480,129,WHITE);  //X轴   CO2
 	//绘制刻度
-	for(i=1;i<32;i++)
+	for(i=1;i<37;i++)
 	{
 		LCD_DrawLine(40+12*i,274,40+12*i,271,GRAY);		//垂直标度(436-10)/10=42.6
-		if(i<15)
-			LCD_ShowNum(40+29*(i-1),276,(i-1)*5,2,12,1,WHITE,WAVE_SHOW_INTERFACE_BACKCOLOR);		
+		if(i<37)
+			LCD_ShowNum(40+24*(i-1),276,(i-1)*5,2,12,1,WHITE,WAVE_SHOW_INTERFACE_BACKCOLOR);		
 		LCD_DrawLine(40+12*i,205,40+12*i,203,GRAY);		//垂直标度(436-10)/10=42.6
 		
 		LCD_DrawLine(40+12*i,128,40+12*i,126,GRAY);		//垂直标度(436-10)/10=42.6
 		
 		//LCD_DrawLine(30,290-23*i,CURSOR-30,290-23*i,GRAY);	//水平标度
 	}
-	LCD_DrawLine(40,259,CURSOR-40,259,RED);//PM2.5   274-75/5得来的   画标度线
-	LCD_DrawLine(40,165,CURSOR-40,165,RED);//HCHO
-	LCD_DrawLine(40,90,CURSOR-40,90,RED);//CO2
+	LCD_DrawLine(40,259,480,259,RED);//PM2.5   274-75/5得来的   画标度线
+	LCD_DrawLine(40,165,480,165,RED);//HCHO
+	LCD_DrawLine(40,90,480,90,RED);//CO2
 	
-	Show_Str(24,259,100,12,"75",12,0,RED,WAVE_SHOW_INTERFACE_BACKCOLOR);
+	Show_Str(24,249,100,12,"75",12,0,RED,WAVE_SHOW_INTERFACE_BACKCOLOR);
 	Show_Str(14,155,100,12,"0.08",12,0,RED,WAVE_SHOW_INTERFACE_BACKCOLOR);
 	Show_Str(14,85,100,12,"800",12,0,RED,WAVE_SHOW_INTERFACE_BACKCOLOR);
-	for(i=0;i<Draw_Wave_Flag-1;i++)
+	for(i=0;i<Draw_Wave_Flag;i++)
 	{
-		LCD_DrawLine(40+i*29,274-DataRemember_Hour.PM2_5[i]/5,40+(i+1)*29,274-DataRemember_Hour.PM2_5[i+1]/5,GREEN);  //4为顶值为300时的
+		//LCD_DrawLine(40+i*9,274-DataRemember_Hour.PM2_5[i]/5,40+(i+1)*15,274-DataRemember_Hour.PM2_5[i+1]/5,C_VIOLET);  //4为顶值为300时的
+		LCD_Fill(52+i*9-3,274,40+i*9+3,274-DataRemember_Hour.PM2_5[i]/5,C_VIOLET);
 		if((SysParaSetInfo.SensorSwitch&0x01) == 0x01)
-			LCD_DrawLine(40+i*29,128-DataRemember_Hour.CO2[i]/21,40+(i+1)*29,128-DataRemember_Hour.CO2[i+1]/21,GREEN);
+			//LCD_DrawLine(40+i*9,128-DataRemember_Hour.CO2[i]/21,40+(i+1)*15,128-DataRemember_Hour.CO2[i+1]/21,C_VIOLET);
+			LCD_Fill(52+i*9-3,128,40+i*9+3,128-DataRemember_Hour.CO2[i]/21,C_VIOLET);
 		if((SysParaSetInfo.SensorSwitch&0x02) == 0x02)
-			LCD_DrawLine(40+i*29,205-DataRemember_Hour.HCHO[i]*5.13,40+(i+1)*29,205-DataRemember_Hour.HCHO[i+1]*5.13,GREEN);
+			//LCD_DrawLine(40+i*9,205-DataRemember_Hour.HCHO[i]*5.13,40+(i+1)*15,205-DataRemember_Hour.HCHO[i+1]*5.13,C_VIOLET);
+			LCD_Fill(52+i*9-3,205,40+i*9+3,205-DataRemember_Hour.HCHO[i]*5.13,C_VIOLET);
 	}
 	Current_Show_Interface = Curr_WaveForm_Show;
 	OSTmrStart(tmr1,&err);//启动软件定时器1
@@ -1588,9 +1599,9 @@ void Load_SetShow_Interface_4(void)
 {
 	uint8_t Cnt = 0;
 	uint8_t err;
-	LCD_Fill(0,36,239,289,SET_SHOW_INTERFACE_LEFT_BACKCOLOR);
-	LCD_Fill(241,36,CURSOR-22,289,SET_SHOW_INTERFACE_RIGHT_BACKCOLOR); 
-	Show_Str(150,40,300,24,"系统参数设置",24,0,BLACK,BRRED);
+	LCD_Fill(0,28,239,289,SET_SHOW_INTERFACE_LEFT_BACKCOLOR);
+	LCD_Fill(241,28,480,289,SET_SHOW_INTERFACE_RIGHT_BACKCOLOR); 
+	Show_Str(166,35,300,24,"系统参数设置",24,0,BLACK,BRRED);
 	//LCD_DrawLine(0,60,CURSOR-25,60,LIGHTBLUE);  //分割线
 	LCD_DrawLine(240,60,240,290,LIGHTBLUE);
 	//LCD_DrawLine(0,290,CURSOR-25,290,LIGHTBLUE);
@@ -1601,7 +1612,7 @@ void Load_SetShow_Interface_4(void)
 	Show_Str(25,185,300,24,(uint8_t *)SetUIL1_Text[4],24,0,SET_SHOW_INTERFACE_LEFT_TEXTCOLOR,SET_SHOW_INTERFACE_LEFT_BACKCOLOR);
 	Show_Str(25,215,300,24,(uint8_t *)SetUIL1_Text[5],24,0,SET_SHOW_INTERFACE_LEFT_TEXTCOLOR,SET_SHOW_INTERFACE_LEFT_BACKCOLOR);
 	Show_Str(25,245,300,24,(uint8_t *)SetUIL1_Text[6],24,0,SET_SHOW_INTERFACE_LEFT_TEXTCOLOR,SET_SHOW_INTERFACE_LEFT_BACKCOLOR);
-	Show_Str(280,155,170,24,SOFTWARE_VERSION,24,0,SET_SHOW_INTERFACE_RIGHT_TEXTCOLOR,SET_SHOW_INTERFACE_RIGHT_BACKCOLOR);
+	Show_Str(310,155,170,24,SOFTWARE_VERSION,24,0,SET_SHOW_INTERFACE_RIGHT_TEXTCOLOR,SET_SHOW_INTERFACE_RIGHT_BACKCOLOR);
 	Current_Show_Interface = Curr_Set_Show;
 	OSTmrStart(tmr1,&err);//启动软件定时器1
 	while(1)
@@ -2953,6 +2964,7 @@ void LinkWifi_Enable(void)
 {
 	if((SysParaSetInfo.SensorSwitch&0X04) == 0X04)
 	{
+		Show_Str(300,200,300,24,"设置中...",24,0,SET_SHOW_INTERFACE_RIGHT_TEXTCOLOR,SET_SHOW_INTERFACE_RIGHT_BACKCOLOR);	
 //		if(Esp8266Config.WifiLinkSuccFlag || !Esp8266InitFinishFlag)  //已经连接过WIFI了
 //		{
 //			if(Esp8266Config.WifiLinkSuccFlag)
@@ -2969,7 +2981,7 @@ void LinkWifi_Enable(void)
 	{
 		Esp8266_DisConectServer();  //断开TCP的连接
 		Esp8266_ReStart();   //重启
-		delay_ms(3000);
+		//delay_ms(3000);
 		Esp8266Config.WifiLinkSuccFlag = 0;
 		Encoder_Type = ENCODER_PRESSED;
 	}

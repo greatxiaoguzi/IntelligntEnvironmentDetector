@@ -154,8 +154,13 @@ extern uint16_t  BACK_COLOR; //背景颜色.默认为白色
 #define C_ORANGE_RED     0xFA20
 #define C_LIME_GREEN     0x3666
 #define C_VIOLET		 0xEC1D 
-#define C_HOT_PINK		 0xFB56
+//#define C_HOT_PINK		 0xFB56
 #define C_THISTLE		 0xD5FA
+//#define C_MEDIUM_SLATE_BLUE	 0x7B5D
+//#define C_LIGHT_BLUE	0xAEBC
+//#define C_LIGHT_GRAY	0xD69A
+#define C_DARK_ORCHID	0x9999
+
 //GUI颜色
 
 #define DARKBLUE      	 0X01CF	//深蓝色

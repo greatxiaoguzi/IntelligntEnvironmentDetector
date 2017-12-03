@@ -18,12 +18,13 @@
 #define PMCNT_SHOW_INTERFACE_BACKCOLOR			BLACK
 #define WAVE_SHOW_INTERFACE_BACKCOLOR			BLACK
 #define FillColor  								BLACK  //右边区域的底色
-#define TOP_TITLE_BACK_COLOR 					BLACK
+#define TOP_TITLE_BACK_COLOR 					C_DARK_ORCHID
 #define AQI_COLOR  								C_VIOLET
-#define WEATHERINFO_COLOR                       C_LIME_GREEN
+#define WEATHERINFO_COLOR                       C_VIOLET
 #define BRAND_NAME_COLOR                        WHITE
 #define TEMPHUMI_ALARM_COLOR                    C_VIOLET
-#define BOTTOM_TITTLE_BACK_COLOR 				BLACK
+#define BOTTOM_TITTLE_BACK_COLOR 				C_DARK_ORCHID
+
 #define SET_SHOW_INTERFACE_LEFT_TEXTBACKCOLOR	BLUE
 #define SET_SHOW_INTERFACE_LEFT_TEXTCOLOR       BLACK
 #define SET_SHOW_INTERFACE_RIGHT_TEXTBACKCOLOR	BLUE
@@ -124,9 +125,9 @@ __packed typedef struct  DISPCIRDEF
 //一个小时的数据记录,每五分钟记录一次
 __packed typedef struct
 {
-	uint8_t HCHO[14];//甲醛
-	uint16_t CO2[14];//二氧化碳
-	uint16_t PM2_5[14];
+	uint8_t HCHO[36];//甲醛
+	uint16_t CO2[36];//二氧化碳
+	uint16_t PM2_5[36];
 }DataRemember_TypeDef;
 
 #define MENU_SIZE  43      //菜单深度
