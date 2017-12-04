@@ -1,6 +1,10 @@
 #ifndef _APP_C
 #define _APP_C
 #include "include.h"
+#define LOG_LEVEL 3
+#define LOG_NAME "App"
+#include "log.h"
+
 //任务堆栈
 __align(8) OS_STK MainUI_TASK_STK[MainUI_STK_SIZE];  			//主显示任务
 __align(8) OS_STK DataCloud_TASK_STK[DataCloud_STK_SIZE];     	//云端数据任务
@@ -142,11 +146,11 @@ void Prior_Task(void *pdata)
 {
     while(1)
     {
-		LoadSensorData();
-		SpeechRecgnizeTask();
-		if(nAsrStatus == LD_ASR_RUNING)
-			OSSemPost(sem_data_handle); //发送数据处理完成信号量
-		delay_ms(100);
+			LoadSensorData();
+			SpeechRecgnizeTask();
+			if(nAsrStatus == LD_ASR_RUNING)
+				OSSemPost(sem_data_handle); //发送数据处理完成信号量
+			delay_ms(100);
     }
 }
 //PM2.5传感器的输出是一个模拟电压成正比的测量粉尘密度，具有0.5V/0.1mg/m3的灵敏度
@@ -160,65 +164,25 @@ void MainUI_task(void *pdata)
 		//IWDG_ReloadCounter();   //喂狗
     }
 }
-
+void Gizwits_Main_Init(void);
+void GizwitsUpload(void);
 
 //系统主任务包括液晶屏显示任务，网络数据传输等
 void DataCloud_task(void *pdata)
 {
+	uint8_t err,i;
 	if((SysParaSetInfo.SensorSwitch&0x04) == 0x04)  		//使能了ESP8266的话
 	{
-		Esp8266_Config();
+		Gizwits_Main_Init();//机智云初始化
 	}
-	 while(1)
-	 {
-		if(!ListenRec())    	 //优先监听网络数据是否有接收到
-		{
-			//NETDataDeal();       //处理网络接收到的数据
-		}
-		else if(Current_Show_Interface != Curr_SetPara_Show)
-		{
-			if((SysParaSetInfo.SensorSwitch&0x04) == 0x04)
-			{
-				if(Esp8266InitFinishFlag)
-				{
-					if((SysTimeData.Second%20)!=0)   //此处正在进行语音播放,故不执行
-					{
-						if(SysTimeData.Hour==0 && SysTimeData.Minute==0)  //如果到了第二天的话在继续更新天气和时间信息
-						{
-							Esp8266_Config();
-						}
-						switch(Sensor_Data_With_cJson())
-						{
-							case 0XF1:break;
-							case 0X00:
-							{
-								Esp8266Config.ServerLinkStat = 1;
-								WifiOnlineDetect = 0;   //清零重新开始判断
-							}break;
-							case 0X01:
-							{
-								Esp8266Config.ServerLinkStat = 0;
-								SetBeepFreq(AlarmFreqTab[9]);
-								WifiOnlineDetect ++;
-								if(WifiOnlineDetect > 2)   //这里说明WIFI已经失去连接，需要重新连接WIFI
-								{
-									WifiOnlineDetect = 0;
-									Esp8266_QuitPassThroughLinkServer();
-									Esp8266_DisConectServer();
-//									Esp8266_ConectServer(UP_LOAD_SENSOR_DATA_MODE);
-//									PkgURL(2,(uint8_t*)UserKey);
-									Esp8266_Config();
-								}
-							}break;
-							default:break;
-						}
-					}
-				}
-			}
-			delay_ms(100);
-		 }
-		delay_ms(50);   //任务切换
-	  }
+	while(1)
+	{
+		LOG_INFO("DataCloud_task Run\r\n");
+		OSSemPend(sem_data_handle,0,&err);  //请求信号量
+		//LoadSensorData();  //加载传感器数据
+		GizwitsUpload();//机智云上传
+		delay_ms(60000);   //任务切换
+	}
 }
 
 #endif

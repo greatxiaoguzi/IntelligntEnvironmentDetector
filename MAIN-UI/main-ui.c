@@ -1,4 +1,9 @@
 #include "include.h"
+#include "gizwits_protocol.h"
+#define LOG_LEVEL 3
+#define LOG_NAME "Main-Ui"
+#include "log.h"
+bool isHoldEvent=FALSE;
 //#include <locale.h>
 //美标计算表
 const float USASt_Tab[7][4]={
@@ -23,7 +28,7 @@ const StatusTab EncoderTab[MENU_SIZE] =
 	{6,17,7,5,(*SetLay1UI_DeviceSW)},
 	{7,18,8,6,(*SetLay1UI_DataRemUnit)},
 	{8,19,9,7,(*SetLay1UI_Threshold)},
-	{9,39,10,8,(*SetLay1UI_WIFIConfig)},
+	{9,9,10,8,(*SetLay1UI_WIFIConfig)},
 	{10,0,4,9,(*SetLay1UI_Quit)},
 	//日期设置
 	{11,12,0,0,(*SetLay2UI_Time_Year)}, 	//设置年
@@ -1310,6 +1315,7 @@ void DispWeatherInfo(void)
 		Show_Str(277,17,150,16,buf,16,0,WEATHERINFO_COLOR,TOP_TITLE_BACK_COLOR);
 	}
 }
+char * WifiStateStr="WiFi未设置";
 //加载显示界面1
 void Load_ParaShow_Interface_1(void)
 {
@@ -1328,8 +1334,6 @@ void Load_ParaShow_Interface_1(void)
 		LCD_DrawLine(0,290,CURSOR-22,290,LIGHTBLUE);	//下面的水平线
 		LoadColorPat();   							//加载色谱和标度
 		Show_Str(0,8,100,24,BRAND_NAME,24,0,WHITE,TOP_TITLE_BACK_COLOR);  //显示商标
-		if(AcuireFinishFlag == 0)
-			Show_Str(281,17,150,16,"无天气信息",16,0,GRAY,TOP_TITLE_BACK_COLOR);
 		DispWeatherInfo();
 	}
 	Ctrl_Switch_Staus(360,296);	  //从右边往左边便宜坐标
@@ -1420,6 +1424,8 @@ void Load_ParaShow_Interface_1(void)
 			if(CloseMachineFlag == 0)
 				EnvirQuaty(0,192);  //质量检测判断
 		}
+		Show_Str(281,17,150,16,(uint8_t *)WifiStateStr,16,0,GRAY,TOP_TITLE_BACK_COLOR);
+		LOG_INFO("Main UI\r\n");
 		//delay_ms(10);
 		//EnvirQuaty(0,292);  //质量检测判断
 	}
@@ -1805,32 +1811,125 @@ void SetLay1UI_Threshold(void)
 //WIFI状态配置
 void SetLay1UI_WIFIConfig(void)
 {
+	uint8_t SelectIndex=10;
+	bool Is_Selected=TRUE;
 	Show_Str(25,185,300,24,(uint8_t *)SetUIL1_Text[4],24,0,SET_SHOW_INTERFACE_LEFT_TEXTCOLOR,SET_SHOW_INTERFACE_LEFT_BACKCOLOR);
 	Show_Str(25,215,300,24,(uint8_t *)SetUIL1_Text[5],24,0,SET_SHOW_INTERFACE_LEFT_TEXTCOLOR,SET_SHOW_INTERFACE_LEFT_TEXTBACKCOLOR);
 	Show_Str(25,245,300,24,(uint8_t *)SetUIL1_Text[6],24,0,SET_SHOW_INTERFACE_LEFT_TEXTCOLOR,SET_SHOW_INTERFACE_LEFT_BACKCOLOR);
 	LCD_Fill(250,65,430,280,SET_SHOW_INTERFACE_RIGHT_BACKCOLOR); //退出后清楚显示
-	if(!Esp8266Config.WifiLinkSuccFlag)
-		Show_Str(270,65,170,16,"按下进入",16,0,GRAY,SET_SHOW_INTERFACE_RIGHT_BACKCOLOR);
-	else
-		Show_Str(270,65,170,16,"按下设置",16,0,GRAY,SET_SHOW_INTERFACE_RIGHT_BACKCOLOR);
-	if((SysParaSetInfo.SensorSwitch&0x04) == 0x04)
-	{
-		if(Esp8266Config.WifiLinkSuccFlag)
-		{
-			Show_Str(250,140,170,16,Esp8266Config.WireNet[0],16,0,SET_SHOW_INTERFACE_RIGHT_TEXTCOLOR,SET_SHOW_INTERFACE_RIGHT_BACKCOLOR);
-			Show_Str(250,175,170,16,Esp8266Config.WireNet[1],16,0,SET_SHOW_INTERFACE_RIGHT_TEXTCOLOR,SET_SHOW_INTERFACE_RIGHT_BACKCOLOR);
-			Show_Str(250,210,170,16,Esp8266Config.ServerIP,16,0,SET_SHOW_INTERFACE_RIGHT_TEXTCOLOR,SET_SHOW_INTERFACE_RIGHT_BACKCOLOR);
-		}
-	}
-	else if((SysParaSetInfo.SensorSwitch&0x04) != 0x04)
-		Show_Str(250,175,170,24,"WIFI未使能",24,0,SET_SHOW_INTERFACE_RIGHT_TEXTCOLOR,SET_SHOW_INTERFACE_RIGHT_BACKCOLOR);
+	uint8_t y;
 	while(1)
 	{
-		if(Encoder_Type != ENCODER_VOID)   //跳出
+		y=65;
+		if(SelectIndex==0)
+			Show_Str(250,y,300,24,(uint8_t *)"WiFi AP模式",24,0,SET_SHOW_INTERFACE_LEFT_TEXTCOLOR,SET_SHOW_INTERFACE_LEFT_TEXTBACKCOLOR);
+		else
+			Show_Str(250,y,300,24,(uint8_t *)"WiFi AP模式",24,0,SET_SHOW_INTERFACE_LEFT_TEXTCOLOR,SET_SHOW_INTERFACE_LEFT_BACKCOLOR);
+		y+=30;
+		if(SelectIndex==1)
+			Show_Str(250,y,300,24,(uint8_t *)"WiFi AirLink模式",24,0,SET_SHOW_INTERFACE_LEFT_TEXTCOLOR,SET_SHOW_INTERFACE_LEFT_TEXTBACKCOLOR);
+		else
+			Show_Str(250,y,300,24,(uint8_t *)"WiFi AirLink模式",24,0,SET_SHOW_INTERFACE_LEFT_TEXTCOLOR,SET_SHOW_INTERFACE_LEFT_BACKCOLOR);
+		y+=30;
+		if(SelectIndex==2)
+			Show_Str(250,y,300,24,(uint8_t *)"WiFi 复位",24,0,SET_SHOW_INTERFACE_LEFT_TEXTCOLOR,SET_SHOW_INTERFACE_LEFT_TEXTBACKCOLOR);
+		else
+			Show_Str(250,y,300,24,(uint8_t *)"WiFi 复位",24,0,SET_SHOW_INTERFACE_LEFT_TEXTCOLOR,SET_SHOW_INTERFACE_LEFT_BACKCOLOR);
+		y+=30;
+		if(SelectIndex==3)
+			Show_Str(250,y,300,24,(uint8_t *)"返回上一级",24,0,SET_SHOW_INTERFACE_LEFT_TEXTCOLOR,SET_SHOW_INTERFACE_LEFT_TEXTBACKCOLOR);
+		else
+			Show_Str(250,y,300,24,(uint8_t *)"返回上一级",24,0,SET_SHOW_INTERFACE_LEFT_TEXTCOLOR,SET_SHOW_INTERFACE_LEFT_BACKCOLOR);
+		while(!isHoldEvent)
+		{
+			if(Encoder_Type != ENCODER_VOID)//等待按键
+			{
+				if(Encoder_Type == ENCODER_PRESSED)
+				{
+					isHoldEvent=TRUE;
+					continue;
+				}
+				else
+				{
+					break;
+				}
+			}
+			delay_ms(100);
+		}
+		if(!isHoldEvent)
+			break;
+		if(Encoder_Type != ENCODER_VOID)
 		{
 			if(Encoder_Type == ENCODER_PRESSED)
-				LCD_Fill(250,65,430,280,SET_SHOW_INTERFACE_RIGHT_BACKCOLOR); //退出后清楚显示
-			break;
+			{
+				if(SelectIndex==10)
+				{
+					SelectIndex=0;
+				}
+				else
+				{
+					if(SelectIndex==3)
+					{
+						SelectIndex=10;
+						isHoldEvent=FALSE;
+					}
+					else
+					{
+						LCD_Fill(250,65,430,280,SET_SHOW_INTERFACE_RIGHT_BACKCOLOR); //清楚显示
+						if(SelectIndex==0)
+						{
+							if(gizwitsSetMode(WIFI_SOFTAP_MODE)!=0)
+								Show_Str(250,y,300,24,(uint8_t *)"已进入AP模式",24,0,SET_SHOW_INTERFACE_LEFT_TEXTCOLOR,SET_SHOW_INTERFACE_LEFT_BACKCOLOR);
+							else
+							{
+								Show_Str(250,y,300,24,(uint8_t *)"出错",24,0,SET_SHOW_INTERFACE_LEFT_TEXTCOLOR,SET_SHOW_INTERFACE_LEFT_BACKCOLOR);
+							}
+						}
+						if(SelectIndex==1)
+						{
+							if(gizwitsSetMode(WIFI_AIRLINK_MODE)!=0)
+								Show_Str(250,y,300,24,(uint8_t *)"已进入AirLink",24,0,SET_SHOW_INTERFACE_LEFT_TEXTCOLOR,SET_SHOW_INTERFACE_LEFT_BACKCOLOR);
+							else
+							{
+								Show_Str(250,y,300,24,(uint8_t *)"出错",24,0,SET_SHOW_INTERFACE_LEFT_TEXTCOLOR,SET_SHOW_INTERFACE_LEFT_BACKCOLOR);
+							}
+						}
+						if(SelectIndex==2)
+						{
+							if(gizwitsSetMode(WIFI_RESET_MODE)!=0)
+								Show_Str(250,y,300,24,(uint8_t *)"WiFi已复位",24,0,SET_SHOW_INTERFACE_LEFT_TEXTCOLOR,SET_SHOW_INTERFACE_LEFT_BACKCOLOR);
+							else
+							{
+								Show_Str(250,y,300,24,(uint8_t *)"出错",24,0,SET_SHOW_INTERFACE_LEFT_TEXTCOLOR,SET_SHOW_INTERFACE_LEFT_BACKCOLOR);
+							}
+						}
+						delay_ms(1000);
+						LCD_Fill(250,65,430,280,SET_SHOW_INTERFACE_RIGHT_BACKCOLOR); //清楚显示
+					}
+				}
+				//LCD_Fill(250,65,430,280,SET_SHOW_INTERFACE_RIGHT_BACKCOLOR); //退出后清楚显示
+			}
+			if(Encoder_Type == ENCODER_BACKWORD)
+			{
+				if(SelectIndex!=10)
+				{
+					if(SelectIndex==0)
+						SelectIndex=3;
+					else
+						SelectIndex--;
+				}
+			}
+			if(Encoder_Type == ENCODER_FORWORD)
+			{
+				if(SelectIndex!=10)
+				{
+					if(SelectIndex==3)
+						SelectIndex=0;
+					else
+						SelectIndex++;
+				}
+			}
+			Encoder_Type=ENCODER_VOID;
 		}
 		delay_ms(10);
 	}
@@ -3014,20 +3113,24 @@ void MenuOperate(void)
 {
 	if(!StandbyMode)
 	{
+		LOG_INFO("UI Run:%d\r\n",Encoder_Type);
 		switch(Encoder_Type)
 		{
 			case  ENCODER_FORWORD: 	 //正转
 			{
+				LOG_INFO("ENCODER_FORWORD\r\n");
 				EncoderFuncIndex = EncoderTab[EncoderFuncIndex].EncoderForwordStatus;  	//确认按键
-				Encoder_Type = ENCODER_VOID;
+				Encoder_Type = ENCODER_VOID;			
 			}break;
 			case  ENCODER_BACKWORD:   //反转
 			{
+				LOG_INFO("ENCODER_BACKWORD\r\n");
 				EncoderFuncIndex = EncoderTab[EncoderFuncIndex].EncoderBackwordStatus;		//向上按键s2
-				Encoder_Type = ENCODER_VOID;
+				Encoder_Type = ENCODER_VOID;				
 			}break;
 			case  ENCODER_PRESSED:    //按下
 			{
+				LOG_INFO("ENCODER_PRESSED\r\n");
 				EncoderFuncIndex = EncoderTab[EncoderFuncIndex].EncoderPressStatus; 	//向下按键s3
 				Encoder_Type = ENCODER_VOID;
 			}break; 

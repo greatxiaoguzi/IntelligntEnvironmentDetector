@@ -10,12 +10,11 @@
       <TargetName>Project</TargetName>
       <ToolsetNumber>0x4</ToolsetNumber>
       <ToolsetName>ARM-ADS</ToolsetName>
-      <pCCUsed>5060061::V5.06 update 1 (build 61)::ARMCC</pCCUsed>
       <TargetOption>
         <TargetCommonOption>
           <Device>STM32F103RC</Device>
           <Vendor>STMicroelectronics</Vendor>
-          <PackID>Keil.STM32F1xx_DFP.1.0.4</PackID>
+          <PackID>Keil.STM32F1xx_DFP.2.1.0</PackID>
           <PackURL>http://www.keil.com/pack/</PackURL>
           <Cpu>IROM(0x08000000,0x40000) IRAM(0x20000000,0xC000) CPUTYPE("Cortex-M3") CLOCK(12000000) ELITTLE</Cpu>
           <FlashUtilSpec></FlashUtilSpec>
@@ -81,12 +80,10 @@
           <AfterMake>
             <RunUserProg1>1</RunUserProg1>
             <RunUserProg2>0</RunUserProg2>
-            <UserProg1Name>D:\Keil_v5\ARM\ARMCC\bin\fromelf.exe   --bin -o  ..\OBJ\KEY.bin ..\OBJ\KEY.axf</UserProg1Name>
+            <UserProg1Name>F:\Keil_v5\ARM\ARMCC\bin\fromelf.exe   --bin -o  ..\OBJ\KEY.bin ..\OBJ\KEY.axf</UserProg1Name>
             <UserProg2Name></UserProg2Name>
             <UserProg1Dos16Mode>0</UserProg1Dos16Mode>
             <UserProg2Dos16Mode>0</UserProg2Dos16Mode>
-            <nStopA1X>0</nStopA1X>
-            <nStopA2X>0</nStopA2X>
           </AfterMake>
           <SelectedForBatchBuild>0</SelectedForBatchBuild>
           <SVCSIdString></SVCSIdString>
@@ -230,7 +227,6 @@
             <useUlib>1</useUlib>
             <EndSel>0</EndSel>
             <uLtcg>0</uLtcg>
-            <nSecure>0</nSecure>
             <RoSelD>3</RoSelD>
             <RwSelD>3</RwSelD>
             <CodeSel>0</CodeSel>
@@ -313,7 +309,7 @@
               </OCR_RVCT3>
               <OCR_RVCT4>
                 <Type>1</Type>
-                <StartAddress>0x800e000</StartAddress>
+                <StartAddress>0x8000000</StartAddress>
                 <Size>0x40000</Size>
               </OCR_RVCT4>
               <OCR_RVCT5>
@@ -365,15 +361,11 @@
             <uSurpInc>0</uSurpInc>
             <uC99>1</uC99>
             <useXO>0</useXO>
-            <v6Lang>0</v6Lang>
-            <v6LangP>0</v6LangP>
-            <vShortEn>0</vShortEn>
-            <vShortWch>0</vShortWch>
             <VariousControls>
-              <MiscControls></MiscControls>
-              <Define>STM32F10X_HD,USE_STDPERIPH_DRIVER</Define>
+              <MiscControls>--locale=english</MiscControls>
+              <Define>STM32F10X_HD,USE_STDPERIPH_DRIVER,LOG_MODULE_ENABLE=1</Define>
               <Undefine></Undefine>
-              <IncludePath>..\SYSTEM\sys;..\USER;..\STM32F10x_FWLib\inc;..\CORE;..\HARDWARE\ADC;..\HARDWARE\EXTI;..\HARDWARE\INCLUDE;..\HARDWARE\KEY;..\HARDWARE\LED;..\HARDWARE\MOTO;..\HARDWARE\SYS_INIT;..\HARDWARE\SPI;..\HARDWARE\LCD;..\UCOSII\CONFIG;..\UCOSII\PORT;..\UCOSII\CORE;..\SYSTEM\delay;..\SYSTEM\usart;..\APP;..\HARDWARE\MYI2C;..\HARDWARE\SD_CARD;..\HARDWARE\ESP8266;..\HARDWARE\BMP_1820;..\HARDWARE\MYI2C;..\HARDWARE\EEPROM;..\HARDWARE\BSP;..\HARDWARE\W25Q64;..\HARDWARE\RS485;..\HARDWARE\AT24CXX;..\HARDWARE\RX8025T;..\HARDWARE\SHT30;..\HARDWARE\SenseAir_8_CO2;..\HARDWARE\LD3320;..\HARDWARE\IWDG;..\FATFS\option;..\FATFS;..\FONTSHOW;..\MALLOC;..\MAIN-UI;..\Algort</IncludePath>
+              <IncludePath>..\SYSTEM\sys;..\USER;..\STM32F10x_FWLib\inc;..\CORE;..\HARDWARE\ADC;..\HARDWARE\EXTI;..\HARDWARE\INCLUDE;..\HARDWARE\KEY;..\HARDWARE\LED;..\HARDWARE\MOTO;..\HARDWARE\SYS_INIT;..\HARDWARE\SPI;..\HARDWARE\LCD;..\UCOSII\CONFIG;..\UCOSII\PORT;..\UCOSII\CORE;..\SYSTEM\delay;..\SYSTEM\usart;..\APP;..\HARDWARE\MYI2C;..\HARDWARE\SD_CARD;..\HARDWARE\ESP8266;..\HARDWARE\BMP_1820;..\HARDWARE\MYI2C;..\HARDWARE\EEPROM;..\HARDWARE\BSP;..\HARDWARE\W25Q64;..\HARDWARE\RS485;..\HARDWARE\AT24CXX;..\HARDWARE\RX8025T;..\HARDWARE\SHT30;..\HARDWARE\SenseAir_8_CO2;..\HARDWARE\LD3320;..\HARDWARE\IWDG;..\FATFS\option;..\FATFS;..\FONTSHOW;..\MALLOC;..\MAIN-UI;..\Algort;..\Gizwits\Gizwits;..\Gizwits\User;..\Gizwits\Utils;..\LOG_MODULE</IncludePath>
             </VariousControls>
           </Cads>
           <Aads>
@@ -824,6 +816,51 @@
           </Files>
         </Group>
         <Group>
+          <GroupName>Gizwits</GroupName>
+          <Files>
+            <File>
+              <FileName>gizwits_product.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\Gizwits\Gizwits\gizwits_product.c</FilePath>
+            </File>
+            <File>
+              <FileName>gizwits_protocol.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\Gizwits\Gizwits\gizwits_protocol.c</FilePath>
+            </File>
+            <File>
+              <FileName>main.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\Gizwits\User\main.c</FilePath>
+            </File>
+            <File>
+              <FileName>common.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\Gizwits\Utils\common.c</FilePath>
+            </File>
+            <File>
+              <FileName>dataPointTools.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\Gizwits\Utils\dataPointTools.c</FilePath>
+            </File>
+            <File>
+              <FileName>ringbuffer.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\Gizwits\Utils\ringbuffer.c</FilePath>
+            </File>
+          </Files>
+        </Group>
+        <Group>
+          <GroupName>LOG_MODULE</GroupName>
+          <Files>
+            <File>
+              <FileName>log.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\LOG_MODULE\log.c</FilePath>
+            </File>
+          </Files>
+        </Group>
+        <Group>
           <GroupName>::CMSIS</GroupName>
         </Group>
         <Group>
@@ -862,10 +899,6 @@
                 <uSurpInc>2</uSurpInc>
                 <uC99>2</uC99>
                 <useXO>2</useXO>
-                <v6Lang>0</v6Lang>
-                <v6LangP>0</v6LangP>
-                <vShortEn>0</vShortEn>
-                <vShortWch>0</vShortWch>
                 <VariousControls>
                   <MiscControls></MiscControls>
                   <Define></Define>
@@ -892,6 +925,122 @@
               </Aads>
             </GroupArmAds>
           </GroupOption>
+          <Files>
+            <File>
+              <FileName>RTE_Device.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>RTE\Device\STM32F103RC\RTE_Device.h</FilePath>
+              <FileOption>
+                <CommonProperty>
+                  <UseCPPCompiler>0</UseCPPCompiler>
+                  <RVCTCodeConst>0</RVCTCodeConst>
+                  <RVCTZI>0</RVCTZI>
+                  <RVCTOtherData>0</RVCTOtherData>
+                  <ModuleSelection>0</ModuleSelection>
+                  <IncludeInBuild>0</IncludeInBuild>
+                  <AlwaysBuild>2</AlwaysBuild>
+                  <GenerateAssemblyFile>2</GenerateAssemblyFile>
+                  <AssembleAssemblyFile>2</AssembleAssemblyFile>
+                  <PublicsOnly>2</PublicsOnly>
+                  <StopOnExitCode>11</StopOnExitCode>
+                  <CustomArgument></CustomArgument>
+                  <IncludeLibraryModules></IncludeLibraryModules>
+                  <ComprImg>1</ComprImg>
+                </CommonProperty>
+                <FileArmAds/>
+              </FileOption>
+            </File>
+            <File>
+              <FileName>startup_stm32f10x_hd.s</FileName>
+              <FileType>2</FileType>
+              <FilePath>RTE\Device\STM32F103RC\startup_stm32f10x_hd.s</FilePath>
+              <FileOption>
+                <CommonProperty>
+                  <UseCPPCompiler>0</UseCPPCompiler>
+                  <RVCTCodeConst>0</RVCTCodeConst>
+                  <RVCTZI>0</RVCTZI>
+                  <RVCTOtherData>0</RVCTOtherData>
+                  <ModuleSelection>0</ModuleSelection>
+                  <IncludeInBuild>0</IncludeInBuild>
+                  <AlwaysBuild>2</AlwaysBuild>
+                  <GenerateAssemblyFile>2</GenerateAssemblyFile>
+                  <AssembleAssemblyFile>2</AssembleAssemblyFile>
+                  <PublicsOnly>2</PublicsOnly>
+                  <StopOnExitCode>11</StopOnExitCode>
+                  <CustomArgument></CustomArgument>
+                  <IncludeLibraryModules></IncludeLibraryModules>
+                  <ComprImg>1</ComprImg>
+                </CommonProperty>
+                <FileArmAds>
+                  <Aads>
+                    <interw>2</interw>
+                    <Ropi>2</Ropi>
+                    <Rwpi>2</Rwpi>
+                    <thumb>2</thumb>
+                    <SplitLS>2</SplitLS>
+                    <SwStkChk>2</SwStkChk>
+                    <NoWarn>2</NoWarn>
+                    <uSurpInc>2</uSurpInc>
+                    <useXO>2</useXO>
+                    <VariousControls>
+                      <MiscControls></MiscControls>
+                      <Define></Define>
+                      <Undefine></Undefine>
+                      <IncludePath></IncludePath>
+                    </VariousControls>
+                  </Aads>
+                </FileArmAds>
+              </FileOption>
+            </File>
+            <File>
+              <FileName>system_stm32f10x.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>RTE\Device\STM32F103RC\system_stm32f10x.c</FilePath>
+              <FileOption>
+                <CommonProperty>
+                  <UseCPPCompiler>0</UseCPPCompiler>
+                  <RVCTCodeConst>0</RVCTCodeConst>
+                  <RVCTZI>0</RVCTZI>
+                  <RVCTOtherData>0</RVCTOtherData>
+                  <ModuleSelection>0</ModuleSelection>
+                  <IncludeInBuild>0</IncludeInBuild>
+                  <AlwaysBuild>2</AlwaysBuild>
+                  <GenerateAssemblyFile>2</GenerateAssemblyFile>
+                  <AssembleAssemblyFile>2</AssembleAssemblyFile>
+                  <PublicsOnly>2</PublicsOnly>
+                  <StopOnExitCode>11</StopOnExitCode>
+                  <CustomArgument></CustomArgument>
+                  <IncludeLibraryModules></IncludeLibraryModules>
+                  <ComprImg>1</ComprImg>
+                </CommonProperty>
+                <FileArmAds>
+                  <Cads>
+                    <interw>2</interw>
+                    <Optim>0</Optim>
+                    <oTime>2</oTime>
+                    <SplitLS>2</SplitLS>
+                    <OneElfS>2</OneElfS>
+                    <Strict>2</Strict>
+                    <EnumInt>2</EnumInt>
+                    <PlainCh>2</PlainCh>
+                    <Ropi>2</Ropi>
+                    <Rwpi>2</Rwpi>
+                    <wLevel>2</wLevel>
+                    <uThumb>2</uThumb>
+                    <uSurpInc>2</uSurpInc>
+                    <uC99>2</uC99>
+                    <useXO>2</useXO>
+                    <VariousControls>
+                      <MiscControls></MiscControls>
+                      <Define></Define>
+                      <Undefine></Undefine>
+                      <IncludePath></IncludePath>
+                    </VariousControls>
+                  </Cads>
+                </FileArmAds>
+              </FileOption>
+            </File>
+          </Files>
         </Group>
       </Groups>
     </Target>

@@ -22,7 +22,7 @@ extern "C" {
 #endif
 
 #include <stdint.h>
-#include <stdbool.h>
+//#include <stdbool.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -68,7 +68,7 @@ extern "C" {
 
 
 
-#define MAX_PACKAGE_LEN    (sizeof(devStatus_t)+20)                                     ///< Data buffer maximum length
+#define MAX_PACKAGE_LEN    (sizeof(devStatus_t)+500)                                     ///< Data buffer maximum length
 #define RB_MAX_LEN          (MAX_PACKAGE_LEN*2)     ///< Maximum length of ring buffer
 
 /**@name Data point related definition

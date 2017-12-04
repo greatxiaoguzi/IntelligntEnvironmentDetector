@@ -2,6 +2,7 @@
 #include "usart.h"	  
 #include <stdio.h>                                                                                            
 #include "cJSON.h"
+#include "gizwits_protocol.h"
 //////////////////////////////////////////////////////////////////////////////////
 //如果使用ucos,则包括下面的头文件即可.
 #if SYSTEM_SUPPORT_OS
@@ -41,9 +42,8 @@ void _sys_exit(int x)
 //串口1支持printf函数
 //重定义fputc函数 
 int fputc(int ch, FILE *f)
-{      
-	while((USART1->SR&0X40)==0);//循环发送,直到发送完毕   
-    USART1->DR = (uint8_t) ch;      
+{
+	UsartSendDex(2,(uint8_t)ch);
 	return ch;
 }
 #endif 
@@ -329,31 +329,8 @@ void USART1_IRQHandler(void)                	//串口1中断服务程序
 #endif
    if(USART1->SR&(1<<5))  //判断是否为串口1接收中断	
    {
-	  Data = USART1->DR;
-      if((USART1_RX_STA &(1<<15))==0)  //小于实际的大小则继续接受
-      {
-		  if(USART1_RX_STA&0x4000)		//接收到了0x0d
-		  {
-			if(Data != 0x0a)
-				USART1_RX_STA = 0;	//接收错误,重新开始
-			else 
-				USART1_RX_STA |= 0x8000;	//接收完成了 
-		  }
-		  else
-		  {
-			if(Data == 0x0d)
-				USART1_RX_STA |= 0x4000;
-			else
-			{
-				if(USART1_RX_STA == 0)
-					Wifi_Rec_Outtime = 700;
-				WifiRecBuf[USART1_RX_STA&0X3FFF] = Data;
-				USART1_RX_STA ++;
-				if(USART1_RX_STA > (USART1_REC_LEN-1))
-					USART1_RX_STA = 0;//接收数据错误,重新开始接收	  
-			}
-		  }
-      }
+			Data = USART1->DR;
+			gizPutData(&Data, 1);
    }
 #ifdef OS_TICKS_PER_SEC	 	//如果时钟节拍数定义了,说明要使用ucosII了.
 	OSIntExit();  			//退出中断保护									 
@@ -582,6 +559,31 @@ void UsartSendDex(uint8_t Uartnum,uint8_t data)
 		{
 			while((UART4->SR&0X40)==0);
 			UART4->DR = data;
+		}break;
+		default:break;
+	}
+}
+//串口发送字符串
+void UsartSendString(uint8_t Uartnum,char * data)
+{
+	switch(Uartnum)
+	{
+		case 1:
+		{
+			while(*data)
+			{
+				while((USART1->SR&0X40)==0);
+				USART1->DR = *data;
+				data++;
+			}
+		}break;
+		case 2:
+		{
+			
+		}break;
+		case 4:
+		{
+			
 		}break;
 		default:break;
 	}

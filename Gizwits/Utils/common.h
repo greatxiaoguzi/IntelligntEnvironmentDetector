@@ -21,7 +21,7 @@ extern "C" {
 #endif
 
 #include <stdint.h>
-#include <stdbool.h>
+//#include <stdbool.h>
 #include <stdio.h>
 #include <string.h>
 #include <ctype.h>
@@ -79,32 +79,31 @@ typedef enum
     ERR_SUCCESS                 = 0,        /// <successful execution
                                             
     // Memory                               
-    ERR_MEMORY                  = -0x0101,  /// <Request memory failed
-    ERR_SPACE                   = -0x0102,  /// <lack of buffer space
-    ERR_ILLEGAL_ADDR            = -0x0103,  /// <illegal address access,
+    ERR_MEMORY                  = 1,  /// <Request memory failed
+    ERR_SPACE                   = 2,  /// <lack of buffer space
+    ERR_ILLEGAL_ADDR            = 3,  /// <illegal address access,
                                             
     // parameter                            
-    ERR_PARAM_ILLEGAL           = -0x0201,  /// <parameter is illegal
-    ERR_PARAM_ADDR_NULL         = -0x0202,  /// <parameter address is empty
+    ERR_PARAM_ILLEGAL           = 4,  /// <parameter is illegal
+    ERR_PARAM_ADDR_NULL         = 5,  /// <parameter address is empty
                                             
     //FLASH                                 
-    ERR_FLASH_READ              = -0x0301,  /// <FLASH read error
-    ERR_FLASH_WRITE             = -0x0302,  /// <FLASH write error
-    ERR_FLASH_ADDR              = -0x0303,  /// <FLASH address error
-    ERR_FLASH_SAVE              = -0x0304,  /// <FLASH save error
+    ERR_FLASH_READ              = 6,  /// <FLASH read error
+    ERR_FLASH_WRITE             = 7,  /// <FLASH write error
+    ERR_FLASH_ADDR              = 8,  /// <FLASH address error
+    ERR_FLASH_SAVE              = 9,  /// <FLASH save error
                                             
     //Mathematical calculation              
-    ERR_MATH_DIV                = -0x0401,  /// <Mathematical calculation divisor is illegal
-    ERR_MATH_RANGE              = -0x0402,  /// <Mathematical calculation of the range of illegal
-    ERR_MATH_OVERSTEP           = -0x0403,  /// <Mathematical calculation across the border
+    ERR_MATH_DIV                = 10,  /// <Mathematical calculation divisor is illegal
+    ERR_MATH_RANGE              = 11,  /// <Mathematical calculation of the range of illegal
+    ERR_MATH_OVERSTEP           = 12,  /// <Mathematical calculation across the border
                                             
     //Data search                           
-    ERR_SEARCH_NO_ELEMENT       = -0x0501,  /// <search element failed
+    ERR_SEARCH_NO_ELEMENT       = 13,  /// <search element failed
                                             
     //Non common error type                 
-    ERR_ID_ILLEGAL              = -0x0601,  /// <ID is illegal
+    ERR_ID_ILLEGAL              = 14,  /// <ID is illegal
 } errorCodeType_t;
-
 #pragma pack(1)
 typedef struct
 {

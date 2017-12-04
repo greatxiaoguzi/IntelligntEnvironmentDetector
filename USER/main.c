@@ -73,16 +73,23 @@ void InitHardware(void)
 	LD3320_Init();
 }
 
+int main2(void)
+{
+	while(1)
+	{
+		
+	}
+}
 //主函数
 int main(void)
 {
 //	uint32_t Adcval;
     sys_clock_init(9);   		             	//系统时钟初始化
-	SCB->VTOR = FLASH_BASE | 0xE000;  			//* APPP向量地址，APP程序起始基地址为：0x8010000 */	
+	//SCB->VTOR = FLASH_BASE | 0xE000;  			//* APPP向量地址，APP程序起始基地址为：0x8010000 */	
     delay_init();      		                	//延时初始化   
 	NVIC_Configuration();                    	//设置中断分组
 	StartMachineInit();							//机器供电控制初始化
-    uart_init(115200,9600,9600);     		  	//串口1,3，4初始化初始化()	
+    uart_init(9600,9600,9600);     		  	//串口1,3，4初始化初始化()	
     TFTLCD_Init();      						//彩屏初始化  
     LED_Init();  								//LED初始化
 	mem_init();									//内存池初始化	

@@ -2,7 +2,7 @@
 #define _ESP8266_H
 #include "include.h"
 
-#define Esp8266SendInfo  printf
+#define Esp8266SendInfo(A,B)  //UsartSendString(1,B)
 #define WaitTime  2000  //等待超时时间
 #define FLASH_SAVE_ADDR  0X08020000 				//设置FLASH 保存地址(必须为偶数)
 __packed typedef struct

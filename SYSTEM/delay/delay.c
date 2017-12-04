@@ -9,6 +9,7 @@ static uint16_t fac_ms=0;//ms延时倍乘数
 extern uint16_t Wifi_Rec_Outtime;
 #ifdef OS_CRITICAL_METHOD 	//如果OS_CRITICAL_METHOD定义了,说明使用ucosII了.
 //systick中断服务函数,使用ucos时用到
+extern void gizTimerMs(void);
 void SysTick_Handler(void)
 {
 	if(Wifi_Rec_Outtime > 0)
@@ -17,9 +18,10 @@ void SysTick_Handler(void)
 		if(Wifi_Rec_Outtime == 0)
 			USART1_RX_STA |= 0x8000;
 	}
+	gizTimerMs();
 	OSIntEnter();		    //进入中断
-    OSTimeTick();       //调用ucos的时钟服务程序
-    OSIntExit();        //触发任务切换软中断
+  OSTimeTick();       //调用ucos的时钟服务程序
+  OSIntExit();        //触发任务切换软中断
 }
 #endif
 //初始化延迟函数

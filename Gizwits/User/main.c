@@ -39,17 +39,14 @@
 * @param none
 * @return none
 */
-int Gizwits_Main(void)
+void Gizwits_Main_Init(void)
 {  
     userInit();
-
     gizwitsInit();
-    
-    while(1)
-    {
-        userHandle();
-        
-        gizwitsHandle((dataPoint_t *)&currentDataPoint);
-    }
 }
 
+void GizwitsUpload(void)
+{
+	 userHandle();       
+   gizwitsHandle((dataPoint_t *)&currentDataPoint);
+}
